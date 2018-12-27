@@ -1,1 +1,18 @@
-/Users/me/.aliases
+#!/bin/bash
+
+alias sl="ls"
+alias ls="ls -G"
+alias irb="pry"
+alias be="bundle exec"
+alias weather="curl wttr.in/nyc"
+
+# make `g` behave like `git status` with no args, or `git` with args
+g () {
+  if [ $# -eq 0 ]
+  then
+    git status
+  else
+    git "$@"
+  fi
+}
+__git_complete g _git

@@ -1,0 +1,33 @@
+[alias]
+	a = add
+	aa = add --all :/
+	alias = config --get-regexp ^alias\\.
+	b = branch
+	ci = commit
+	co = checkout
+	d = diff --ignore-space-change
+	l = log --pretty=format:\"%C(green)%h%C(reset) %C(blue)%ad%C(reset) %s%C(yellow)%d%C(reset) %C(blue)[%an]%C(reset)\" --graph --date=short
+	s = status
+	r = remote
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+	ui = true
+	pager = true
+[core]
+	excludesfile = ~/.gitignore
+	editor = atom --wait
+[push]
+	default = matching
+[user]
+	name = Rick Gorman
+	email = gormanite@gmail.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[branch]
+	autoSetupMerge = always

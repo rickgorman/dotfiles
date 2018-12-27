@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# kill existing stuff
+ps -ef | grep redis   | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep puma    | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep spring  | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9
+
+# start a session
+tmux new-session -d -s servers
+
+# start the rails server (top left)
+tmux send-keys 'SKIP_YARN=1 bundle exec rails s' 'C-m'
+tmux rename-window 'rails-server'
+tmux select-window -t servers:0
+
+# split horizontally and start redis (top center)
+tmux split-window -h
+tmux rename-window 'redis'
+tmux send-keys 'redis-server' 'C-m'
+tmux select-window -t servers:1
+
+# split horizontally and start sidekiq (top right)
+tmux split-window -h
+tmux rename-window 'sidekiq'
+tmux send-keys 'SKIP_YARN=1 bundle exec sidekiq' 'C-m'
+
+# resize equally along the horizontal axis:  |-----|--|--|  => |---|---|---|
+tmux select-layout even-horizontal
+
+# move to top left pane
+tmux select-pane -L
+tmux select-pane -L
+
+# start spring server (bottom left)  
+tmux split-window
+tmux rename-window 'spring-server'
+tmux send-keys 'SKIP_YARN=1 bundle exec spring server' 'C-m'
+
+# start rails console (bottom center)
+tmux select-pane -U
+tmux select-pane -R
+tmux split-window
+tmux send-keys 'SKIP_YARN=1 bundle exec rails console' 'C-m'
+tmux rename-window 'rails-console'
+
+# create empty pane (bottom right)
+tmux select-pane -U
+tmux select-pane -R
+tmux split-window
+tmux rename-window 'bash'
+
+# attach to the session
+tmux attach-session -t servers
