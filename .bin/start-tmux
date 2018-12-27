@@ -6,6 +6,9 @@ ps -ef | grep puma    | grep -v grep | awk '{print $2}' | xargs kill -9
 ps -ef | grep spring  | grep -v grep | awk '{print $2}' | xargs kill -9
 ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9
 
+echo "waiting for processes to die..."
+sleep 1
+
 # start a session
 tmux new-session -d -s servers
 
