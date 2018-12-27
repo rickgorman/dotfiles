@@ -25,9 +25,6 @@ WHITE='\[\e[0;37m\]'
 RESET='\[\e[0m\]'
 export PS1="$RED\w$WHITE\$(__git_ps1)$RED\$$RESET "
 
-# omg prompt
-source /Users/rick/.oh-my-git/prompt.sh
-
 #############
 ### other ###
 #############
