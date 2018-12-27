@@ -1,11 +1,16 @@
-export BASH_CONF="bashrc"
+echo "*** now executing .bashrc"
 
-### load extenstions ###
+########################
+### load extensions ###
+########################
 
 source "$HOME/.git-completion.bash"
 source "$HOME/.git-prompt.sh"
+source ~/.scripts/rake_autocomplete.sh
 
+#####################
 ### ENV variables ###
+#####################
 
 # look for commands in these places
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
@@ -20,12 +25,17 @@ WHITE='\[\e[0;37m\]'
 RESET='\[\e[0m\]'
 export PS1="$RED\w$WHITE\$(__git_ps1)$RED\$$RESET "
 
+#############
 ### other ###
+#############
 
 # initialize rbenv
 eval "$(rbenv init -)"
 
-# initialize node version manager
+# initialize nodenv
+eval "$(nodenv init -)"
+
+# initialize node version manager (disabled)
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 
@@ -38,4 +48,5 @@ eval "$(rbenv init -)"
 # heroku autocomplete setup
 HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setup && test -f $HEROKU_AC_BASH_SETUP_PATH && source $HEROKU_AC_BASH_SETUP_PATH;
 
-alias config='/usr/bin/git --git-dir=/Users/me/.cfg/ --work-tree=/Users/me'
+# prior attempt at doing dotfiles via git (disabled) -- https://medium.hackinrio.com/how-to-manage-your-dotfiles-with-git-f7aeed8adf8b
+# alias config='/usr/bin/git --git-dir=/Users/me/.cfg/ --work-tree=/Users/me'

@@ -1,10 +1,50 @@
 #!/bin/bash
 
+# random aliases
 alias sl="ls"
 alias ls="ls -G"
 alias irb="pry"
-alias be="bundle exec"
 alias weather="curl wttr.in/nyc"
+
+# git aliases
+alias gad='git add . && git status'
+alias gadot='echo "deprecated -- use gad instead"; git add . && git status'
+alias gcm='git commit -m'
+alias gco='git checkout'
+alias gcmmm='commit -m && git push'
+alias gs='git status'
+alias ga='git add'
+alias gd='git diff'
+alias gp='git push'
+alias gds='git diff --staged'
+alias gm='git checkout master && git pull origin master && bundle && yarn install && SKIP_YARN=1 be rake db:drop db:create && SKIP_YARN=1 be rake db:migrate && ENV_RAILS=test SKIP_YARN=1 be rake db:migrate'
+alias gpm='git push origin master'
+alias gsl='git stash list'
+alias gf='git fetch'
+alias nb='git checkout -b'
+
+# hub aliases
+alias prl='hub pr list'
+
+# edit aliases
+alias ba='vim ~/.aliases && source ~/.aliases'
+
+# bundle
+alias be='bundle exec'
+alias bes='bundle exec spring'
+alias beg='be guard -P livereload'
+alias brc='be rails c'
+alias brdbm='be rake db:migrate'
+
+# heroku aliases
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+alias gph='git push heroku $CURRENT_BRANCH:master'
+alias h='heroku run'
+alias hrc='heroku run bundle exec rails c -a cmn-admin'
+
+# killing things
+alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
+alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 
 # make `g` behave like `git status` with no args, or `git` with args
 g () {
