@@ -1,12 +1,12 @@
-echo "*** now executing .bashrc"
+# echo "*** now executing .bashrc"
 
 ########################
 ### load extensions ###
 ########################
 
-source "$HOME/.bin/git-completion.bash"
+source "$HOME/.bin/git-completion.sh"
 source "$HOME/.bin/git-prompt.sh"
-source "$HOME/.bin/rake_autocomplete.sh
+source "$HOME/.bin/rake_autocomplete.sh"
 
 #####################
 ### ENV variables ###
@@ -24,6 +24,9 @@ RED='\[\e[0;31m\]'
 WHITE='\[\e[0;37m\]'
 RESET='\[\e[0m\]'
 export PS1="$RED\w$WHITE\$(__git_ps1)$RED\$$RESET "
+
+# omg prompt
+source /Users/rick/.oh-my-git/prompt.sh
 
 #############
 ### other ###
@@ -50,3 +53,4 @@ HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setu
 
 # prior attempt at doing dotfiles via git (disabled) -- https://medium.hackinrio.com/how-to-manage-your-dotfiles-with-git-f7aeed8adf8b
 # alias config='/usr/bin/git --git-dir=/Users/me/.cfg/ --work-tree=/Users/me'
+
