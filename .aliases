@@ -37,8 +37,8 @@ alias brc='be rails c'
 alias brdbm='be rake db:migrate'
 
 # heroku aliases
-CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-alias gph='git push heroku $CURRENT_BRANCH:master'
+#CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+#alias gph='git push heroku $CURRENT_BRANCH:master'
 alias h='heroku run'
 alias hrc='heroku run bundle exec rails c -a cmn-admin'
 
@@ -47,12 +47,12 @@ alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{pri
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 
 # make `g` behave like `git status` with no args, or `git` with args
-g () {
-  if [ $# -eq 0 ]
-  then
-    git status
-  else
-    git "$@"
-  fi
-}
-__git_complete g _git
+#g () {
+#  if [ $# -eq 0 ]
+#  then
+#    git status
+#  else
+#    git "$@"
+#  fi
+#}
+#__git_complete g _git
