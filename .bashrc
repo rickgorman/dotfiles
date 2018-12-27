@@ -5,8 +5,9 @@
 ########################
 
 source "$HOME/.bin/git-completion.sh"
-source "$HOME/.bin/git-prompt.sh"
+# source "$HOME/.bin/git-prompt.sh"
 source "$HOME/.bin/rake_autocomplete.sh"
+source "$HOME/.bin/bash_prompt.sh"
 
 #####################
 ### ENV variables ###
@@ -20,10 +21,10 @@ export PATH="~/.bin:$PATH"
 export EDITOR="vim"
 
 # shortened prompt that includes git branch info
-RED='\[\e[0;31m\]'
-WHITE='\[\e[0;37m\]'
-RESET='\[\e[0m\]'
-export PS1="$RED\w$WHITE\$(__git_ps1)$RED\$$RESET "
+# RED='\[\e[0;31m\]'
+# WHITE='\[\e[0;37m\]'
+# RESET='\[\e[0m\]'
+# export PS1="$RED\w$WHITE\$(__git_ps1)$RED\$$RESET "
 
 #############
 ### other ###
