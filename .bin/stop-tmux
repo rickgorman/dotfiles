@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# kill existing stuff
+echo "waiting for processes to die..."
+cd ~/Workspace/cmn-admin
+SKIP_YARN=1 bundle exec spring stop
+
+pkill -f redis
+pkill -f puma
+pkill -f spring
+pkill -f sidekiq
+
+ps -ef | grep redis   | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep puma    | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep spring  | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9
+sleep 1
+
+tmux kill-session -t servers
