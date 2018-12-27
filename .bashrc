@@ -4,9 +4,9 @@ echo "*** now executing .bashrc"
 ### load extensions ###
 ########################
 
-source "$HOME/.git-completion.bash"
-source "$HOME/.git-prompt.sh"
-source ~/.scripts/rake_autocomplete.sh
+source "$HOME/.bin/git-completion.bash"
+source "$HOME/.bin/git-prompt.sh"
+source "$HOME/.bin/rake_autocomplete.sh
 
 #####################
 ### ENV variables ###
