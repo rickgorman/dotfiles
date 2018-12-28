@@ -9,6 +9,8 @@ source "$HOME/.bin/git-completion.sh"
 source "$HOME/.bin/rake_autocomplete.sh"
 source "$HOME/.bin/bash_prompt.sh"
 
+[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
+
 #####################
 ### ENV variables ###
 #####################
@@ -39,9 +41,6 @@ eval "$(nodenv init -)"
 # initialize node version manager (disabled)
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-
-# load aliases
-[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
 # heroku autocomplete setup
 HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setup && test -f $HEROKU_AC_BASH_SETUP_PATH && source $HEROKU_AC_BASH_SETUP_PATH;
