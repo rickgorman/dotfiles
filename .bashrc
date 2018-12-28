@@ -43,9 +43,6 @@ eval "$(nodenv init -)"
 # load aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
-# load any local configuration
-[[ -f "$HOME/.bashrc.local" ]] && source "$HOME/.bashrc.local"
-
 # heroku autocomplete setup
 HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setup && test -f $HEROKU_AC_BASH_SETUP_PATH && source $HEROKU_AC_BASH_SETUP_PATH;
 
