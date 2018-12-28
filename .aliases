@@ -6,6 +6,12 @@ alias ls="ls -G"
 alias irb="pry"
 alias weather="curl wttr.in/nyc"
 
+# navigation aliases
+alias .='pwd'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+
 # git aliases
 alias gad='git add . && git status'
 alias gadot='echo "deprecated -- use gad instead"; git add . && git status'
@@ -45,9 +51,10 @@ alias restore-common-dev='curl -o latest.dump $(heroku pg:backups public-url --a
 alias h='heroku run'
 alias hrc='heroku run bundle exec rails c -a cmn-admin'
 
-# killing things
+# killing and restarting things
 alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
+alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 
 # make `g` behave like `git status` with no args, or `git` with args
 #g () {
