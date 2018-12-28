@@ -18,9 +18,21 @@ alias .='pwd'
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
-alias ll='ls -laAF'
+
 alias sl="ls"
 alias ls="ls -G"
+
+# list all files colorized in long format
+alias ll='ls -laAF'
+
+########################
+#  Utilities           #
+########################
+
+# Intuitive map function
+# For example, to list all directories that contain a certain file:
+# find . -name .gitattributes | map dirname
+alias map="xargs -n1"
 
 ########################
 #  Git                 #
