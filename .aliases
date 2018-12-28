@@ -1,18 +1,30 @@
 #!/bin/bash
 
-# random aliases
-alias sl="ls"
-alias ls="ls -G"
+########################
+#  Alias Controls      #
+########################
+alias ba='vim ~/.aliases && source ~/.aliases'
+
+########################
+#  Random              #
+########################
 alias irb="pry"
 alias weather="curl wttr.in/nyc"
 
-# navigation aliases
+########################
+#  Navigation          #
+########################
 alias .='pwd'
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
+alias ll='ls -laAF'
+alias sl="ls"
+alias ls="ls -G"
 
-# git aliases
+########################
+#  Git                 #
+########################
 alias gad='git add . && git status'
 alias gadot='echo "deprecated -- use gad instead"; git add . && git status'
 alias gcm='git commit -m'
@@ -29,33 +41,6 @@ alias gsl='git stash list'
 alias gf='git fetch'
 alias nb='git checkout -b'
 
-# hub aliases
-alias prl='hub pr list'
-
-# edit aliases
-alias ba='vim ~/.aliases && source ~/.aliases'
-
-# bundle
-alias be='bundle exec'
-alias bes='bundle exec spring'
-alias beg='be guard -P livereload'
-alias brc='be rails c'
-alias brdbm='be rake db:migrate'
-
-# database aliases
-alias restore-common-dev='curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
-
-# heroku aliases
-#CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-#alias gph='git push heroku $CURRENT_BRANCH:master'
-alias h='heroku run'
-alias hrc='heroku run bundle exec rails c -a cmn-admin'
-
-# killing and restarting things
-alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
-alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
-alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
-
 # make `g` behave like `git status` with no args, or `git` with args
 g () {
   if [ $# -eq 0 ]
@@ -66,3 +51,37 @@ g () {
   fi
 }
 __git_complete g _git
+
+########################
+#  Hub                 #
+########################
+alias prl='hub pr list'
+
+########################
+#  Bundle              #
+########################
+alias be='bundle exec'
+alias bes='bundle exec spring'
+alias beg='be guard -P livereload'
+alias brc='be rails c'
+alias brdbm='be rake db:migrate'
+
+########################
+#  Database            #
+########################
+alias restore-common-dev='curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+
+########################
+#  Heroku              #
+########################
+#CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+#alias gph='git push heroku $CURRENT_BRANCH:master'
+alias h='heroku run'
+alias hrc='heroku run bundle exec rails c -a cmn-admin'
+
+#################################
+#  Killing / Restarting Things  #
+#################################
+alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
+alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
+alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
