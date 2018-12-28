@@ -81,7 +81,7 @@ alias brdbm='be rake db:migrate'
 ########################
 #  Database            #
 ########################
-alias restore-common-dev='curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+alias restore-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
 
 ########################
 #  Heroku              #
