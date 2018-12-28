@@ -36,6 +36,9 @@ alias beg='be guard -P livereload'
 alias brc='be rails c'
 alias brdbm='be rake db:migrate'
 
+# database aliases
+alias restore-common-dev='curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+
 # heroku aliases
 #CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 #alias gph='git push heroku $CURRENT_BRANCH:master'
