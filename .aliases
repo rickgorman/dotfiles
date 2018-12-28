@@ -57,12 +57,12 @@ alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 
 # make `g` behave like `git status` with no args, or `git` with args
-#g () {
-#  if [ $# -eq 0 ]
-#  then
-#    git status
-#  else
-#    git "$@"
-#  fi
-#}
-#__git_complete g _git
+g () {
+  if [ $# -eq 0 ]
+  then
+    git status
+  else
+    git "$@"
+  fi
+}
+__git_complete g _git
