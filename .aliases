@@ -11,6 +11,9 @@ alias ba='vim ~/.aliases && source ~/.aliases'
 alias irb="pry"
 alias weather="curl wttr.in/nyc"
 
+# lock the screen
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
 ########################
 #  Navigation          #
 ########################
@@ -24,6 +27,9 @@ alias ls="ls -G"
 
 # list all files colorized in long format
 alias ll='ls -laAF'
+
+# print all path entries, one per line
+alias path='echo -e ${PATH//:/\\n}'
 
 ########################
 #  Utilities           #
