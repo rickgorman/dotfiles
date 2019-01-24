@@ -59,6 +59,7 @@ alias gm='git checkout master && git pull origin master && bundle && yarn instal
 alias gpm='git push origin master'
 alias gsl='git stash list'
 alias gf='git fetch'
+alias gfa='git fetch --all'
 alias nb='git checkout -b'
 
 # make `g` behave like `git status` with no args, or `git` with args
@@ -80,6 +81,7 @@ alias prl='hub pr list'
 ########################
 #  Bundle              #
 ########################
+alias bi='bundle install'
 alias be='bundle exec'
 alias bes='bundle exec spring'
 alias beg='be guard -P livereload'
@@ -89,7 +91,7 @@ alias brdm='be rake db:migrate'
 ########################
 #  Database            #
 ########################
-alias restore-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+alias update-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
 
 ########################
 #  Heroku              #
