@@ -61,6 +61,7 @@ alias gsl='git stash list'
 alias gf='git fetch'
 alias gfa='git fetch --all'
 alias nb='git checkout -b'
+alias gcp='git cherry-pick'
 
 # make `g` behave like `git status` with no args, or `git` with args
 g () {
