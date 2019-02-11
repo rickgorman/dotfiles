@@ -55,13 +55,16 @@ alias ga='git add'
 alias gd='git diff'
 alias gp='git push'
 alias gds='git diff --staged'
-alias gm='git checkout master && git pull origin master && bundle && yarn install && SKIP_YARN=1 be rake db:drop db:create && SKIP_YARN=1 be rake db:migrate && ENV_RAILS=test SKIP_YARN=1 be rake db:migrate'
+alias gm='git checkout master && git pull origin master && gem install bundler && bundle && yarn install && SKIP_YARN=1 be rake db:drop db:create && SKIP_YARN=1 be rake db:migrate && ENV_RAILS=test SKIP_YARN=1 be rake db:migrate'
 alias gpm='git push origin master'
 alias gsl='git stash list'
 alias gf='git fetch'
 alias gfa='git fetch --all'
 alias nb='git checkout -b'
 alias gcp='git cherry-pick'
+
+# reset schema/structure files
+alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
 
 # make `g` behave like `git status` with no args, or `git` with args
 g () {
@@ -88,11 +91,13 @@ alias bes='bundle exec spring'
 alias beg='be guard -P livereload'
 alias brc='be rails c'
 alias brdm='be rake db:migrate'
+alias brdbm='brdm'
 
 ########################
 #  Database            #
 ########################
 alias update-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+alias update-test-db='be rake db:drop RAILS_ENV=test; be rake db:create RAILS_ENV=test; be rake db:migrate RAILS_ENV=test'
 
 ########################
 #  Heroku              #
