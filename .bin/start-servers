@@ -1,6 +1,25 @@
 #!/bin/sh
 
-# kill existing stuff
+# This script starts a session with the following windows:
+#
+# Window 1
+# +-----------+-----------+---------+
+# | rails     | console   |         |
+# +-----------+-----------+  guard  |
+# | shell     | shell     |         |
+# +-----------+-----------+---------+
+#
+# Window 2
+# +----------------+----------------+
+# | redis          | sidekiq        |
+# +----------------+----------------+
+# | spring         | shell          |
+# +----------------+----------------+
+
+#######################
+# kill existing stuff #
+#######################
+
 echo "waiting for processes to die..."
 cd ~/Workspace/cmn-admin
 SKIP_YARN=1 bundle exec spring stop
@@ -14,8 +33,13 @@ ps -ef | grep redis   | grep -v grep | awk '{print $2}' | xargs kill -9
 ps -ef | grep puma    | grep -v grep | awk '{print $2}' | xargs kill -9
 ps -ef | grep spring  | grep -v grep | awk '{print $2}' | xargs kill -9
 ps -ef | grep sidekiq | grep -v grep | awk '{print $2}' | xargs kill -9
+ps -ef | grep guard   | grep -v grep | awk '{print $2}' | xargs kill -9
 sleep 1
 tmux kill-session -t servers
+
+#######################
+# Window 1            #
+#######################
 
 # start a session
 tmux new-session -d -s servers
@@ -25,16 +49,15 @@ tmux send-keys 'SKIP_YARN=1 bundle exec rails s' 'C-m'
 tmux rename-window 'rails-server'
 tmux select-window -t servers:0
 
-# split horizontally and start redis (top center)
+# split horizontally and open rails console (top center)
 tmux split-window -h
-tmux rename-window 'redis'
-tmux send-keys 'redis-server' 'C-m'
-tmux select-window -t servers:1
+tmux send-keys 'SKIP_YARN=1 bundle exec rails console' 'C-m'
+tmux rename-window 'rails-console'
 
-# split horizontally and start sidekiq (top right)
+# split horizontally and start guard (top right)
 tmux split-window -h
-tmux rename-window 'sidekiq'
-tmux send-keys 'SKIP_YARN=1 bundle exec sidekiq' 'C-m'
+tmux rename-window 'guard'
+tmux send-keys 'SKIP_YARN=1 bundle exec guard' 'C-m'
 
 # resize equally along the horizontal axis:  |-----|--|--|  => |---|---|---|
 tmux select-layout even-horizontal
@@ -43,23 +66,51 @@ tmux select-layout even-horizontal
 tmux select-pane -L
 tmux select-pane -L
 
-# start spring server (bottom left)  
+# start shell (bottom left)  
 tmux split-window
-tmux rename-window 'spring-server'
-tmux send-keys 'SKIP_YARN=1 bundle exec spring server' 'C-m'
+tmux rename-window 'shell2'
 
 # start rails console (bottom center)
+tmux select-pane -R
+tmux split-window
+tmux rename-window 'shell1'
+tmux select-window -t servers:1
+
+#######################
+# Window 2            #
+#######################
+
+# open a second window
+tmux new-window
+
+# start redis (top left)
+tmux send-keys 'redis-server' 'C-m'
+tmux rename-window 'redis'
+
+# split horizontally and start sidekiq
+tmux split-window -h
+tmux rename-window 'sidekiq'
+tmux send-keys 'SKIP_YARN=1 bundle exec sidekiq' 'C-m'
+
+# move to top-left pane
+tmux select-pane -L
+
+# start spring (bottom-left)
+tmux split-window 
+tmux rename-window 'spring'
+tmux send-keys 'SKIP_YARN=1 bundle exec spring server' 'C-m'
+
+# create empty pane (bottom-right)
 tmux select-pane -U
 tmux select-pane -R
 tmux split-window
-tmux send-keys 'SKIP_YARN=1 bundle exec rails console' 'C-m'
-tmux rename-window 'rails-console'
+tmux rename-window 'shell4'
 
-# create empty pane (bottom right)
-tmux select-pane -U
-tmux select-pane -R
-tmux split-window
-tmux rename-window 'bash'
+# resize equally
+#tmux select-layout even-horizontal
 
-# attach to the session
+#######################
+# Attach              #
+#######################
+
 tmux attach-session -t servers
