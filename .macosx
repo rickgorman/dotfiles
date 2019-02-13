@@ -40,5 +40,7 @@ chflags nohidden ~/Library
 # Show the /Volumes folder
 sudo chflags nohidden /Volumes
 
+# Disable creation of .DS_store files
+defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."
