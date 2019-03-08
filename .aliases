@@ -1,6 +1,12 @@
 #!/bin/bash
 
 ########################
+#  Package Mgmt        #
+########################
+
+alias bbd="brew bundle dump --force"
+
+########################
 #  Alias Controls      #
 ########################
 alias ba='vim ~/.aliases && source ~/.aliases'
@@ -57,12 +63,14 @@ alias gd='git diff'
 alias gp='git push'
 alias gds='git diff --staged'
 alias gm='git fetch --all && git checkout master && git reset --hard origin/master && gem install bundler && bundle && yarn install && SKIP_YARN=1 be rake db:drop db:create && SKIP_YARN=1 be rake db:migrate && ENV_RAILS=test SKIP_YARN=1 be rake db:migrate && be rake db:drop RAILS_ENV=test && be rake db:create RAILS_ENV=test && be rake db:migrate RAILS_ENV=test'
-alias gpom='git push origin master'
+alias gpushom='git push origin master'
+alias gpullom='git pull origin master'
 alias gsl='git stash list'
 alias gf='git fetch'
 alias gfa='git fetch --all'
 alias nb='git checkout -b'
 alias gcp='git cherry-pick'
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
