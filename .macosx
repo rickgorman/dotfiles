@@ -46,4 +46,18 @@ sudo chflags nohidden /Volumes
 # Disable creation of .DS_store files
 defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
+###############################################################################
+# Keyboard / Input                                                            #
+###############################################################################
+
+# Shorten initial key repeat delay. Normal minimum is 15 (225 ms). Increments of 15ms.
+defaults write -g InitialKeyRepeat -int 10 
+
+# Increase repeat rate. Normal minimum is 2 (30 ms). Increments of 15ms.
+defaults write -g KeyRepeat -int 1
+
+
+###############################################################################
+###############################################################################
+
 echo "Done. Note that some of these changes require a logout/restart to take effect."
