@@ -27,6 +27,7 @@ alias .='pwd'
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
+alias back='cd -'
 
 alias sl="ls"
 alias ls="ls -G"
@@ -103,9 +104,15 @@ alias brdm='be rake db:migrate'
 alias brdbm='brdm'
 
 ########################
+#  Engine Things       #
+########################
+alias connect_by='be bin/engem connect_by'
+alias chat_by='be bin/engem chat_by'
+
+########################
 #  Database            #
 ########################
-alias update-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump'
+alias update-common-dev='be rake db:drop; be rake db:create; curl -o latest.dump $(heroku pg:backups public-url --app cmn-admin) && pg_restore -c  -O -d common -U common latest.dump; be rake db:migrate'
 alias update-test-db='be rake db:drop RAILS_ENV=test; be rake db:create RAILS_ENV=test; be rake db:migrate RAILS_ENV=test'
 
 ########################
