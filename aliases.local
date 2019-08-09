@@ -77,15 +77,15 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
 
 # make `g` behave like `git status` with no args, or `git` with args
-g () {
-  if [ $# -eq 0 ]
-  then
-    git status
-  else
-    git "$@"
-  fi
-}
-__git_complete g _git
+# g () {
+#   if [ $# -eq 0 ]
+#   then
+#     git status
+#   else
+#     git "$@"
+#   fi
+# }
+# __git_complete g _git
 
 ########################
 #  Hub                 #
