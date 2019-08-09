@@ -9,7 +9,7 @@ alias bbd="brew bundle dump --force"
 ########################
 #  Alias Controls      #
 ########################
-alias ba='vim ~/.aliases && source ~/.aliases'
+alias ba='vim ~/dotfiles-local/aliases.local && source ~/dotfiles-local/aliases.local'
 
 ########################
 #  Random              #
