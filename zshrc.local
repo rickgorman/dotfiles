@@ -24,7 +24,7 @@ export EDITOR="vim"
 #############
 
 # initialize rbenv
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
 
 # initialize nodenv
 eval "$(nodenv init -)"
@@ -143,3 +143,4 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+eval "$(direnv hook zsh)"
