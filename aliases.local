@@ -126,3 +126,5 @@ alias h='heroku run'
 alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
+
+kill9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
