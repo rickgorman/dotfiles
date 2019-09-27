@@ -38,6 +38,7 @@ alias ll='ls -laAF'
 # print all path entries, one per line
 alias path='echo -e ${PATH//:/\\n}'
 
+alias tc-www='cd ~/work/tc-www'
 ########################
 #  Utilities           #
 ########################
