@@ -8,7 +8,7 @@
 	d = diff --ignore-space-change
 	l = log --pretty=format:\"%C(green)%h%C(reset) %C(blue)%ad%C(reset) %s%C(yellow)%d%C(reset) %C(blue)[%an]%C(reset)\" --graph --date=short
 	s = status
-	r = remote
+  r = remote
   ignore = update-index --assume-unchanged
   unignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
