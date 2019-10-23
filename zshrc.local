@@ -19,6 +19,9 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 # make vim the default text editor
 export EDITOR="vim"
 
+# and atom the default visual editor (thanks mburns)
+export VISUAL="atom"
+
 #############
 ### other ###
 #############
