@@ -92,6 +92,11 @@ alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/struc
 # __git_complete g _git
 
 ########################
+# Rails                #
+########################
+alias rake='rails'
+
+########################
 #  Hub                 #
 ########################
 alias prl='hub pr list'
