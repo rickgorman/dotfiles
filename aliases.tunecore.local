@@ -1,0 +1,1 @@
+alias metronome='ssh -i ~/.ssh/tunecore1.pem centos@metronome.tunecore.com'
