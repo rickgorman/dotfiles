@@ -95,6 +95,8 @@ alias gsp="git stash pop"
 alias gssp='git stash show -p'
 alias grc='git rebase --continue'
 alias grs='git rebase --skip'
+alias gbg='git bisect good'
+alias gbb='git bisect bad'
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
