@@ -56,6 +56,13 @@ defaults write -g InitialKeyRepeat -int 15
 # Increase repeat rate. Normal minimum is 2 (30 ms). Increments of 15ms.
 defaults write -g KeyRepeat -int 1
 
+###############################################################################
+# App-specific Settings
+###############################################################################
+
+# Disble slack auto-updates (mostly to disable annoying notifications)
+defaults write com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
+
 
 ###############################################################################
 ###############################################################################
