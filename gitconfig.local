@@ -34,7 +34,7 @@
 	excludesfile = ~/.gitignore
 	editor = atom --wait
 [push]
-	default = matching
+	default = current
 [user]
 	name = Rick Gorman
 	email = gormanite@gmail.com
