@@ -15,7 +15,7 @@ alias ba='vim ~/dotfiles-local/aliases.local && source ~/dotfiles-local/aliases.
 #  Random              #
 ########################
 alias irb="pry"
-alias weather="curl wttr.in/nyc"
+alias weather="curl wttr.in"
 
 # lock the screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
