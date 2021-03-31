@@ -134,7 +134,10 @@ alias brc='be rails c'
 alias brs='be rails s'
 alias brdm='be rake db:migrate'
 alias brdbm='brdm'
-
+alias brdbmr='be rake db:migrate; be rake db:rollback'
+alias brdbr='be rake db:drop RAILS_ENV=test && be rake db:create RAILS_ENV=test
+&& be rake db:migrate RAILS_ENV=test'
+alias brr='be rake routes | fzf'
 ########################
 #  Database            #
 ########################
