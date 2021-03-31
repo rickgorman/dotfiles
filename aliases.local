@@ -149,6 +149,12 @@ alias brr='be rake routes | fzf'
 #alias gph='git push heroku $CURRENT_BRANCH:master'
 alias h='heroku run'
 
+#######################
+# Github              #
+#######################
+
+alias newpr='gh pr create --fill && gh pr view --web'
+
 #################################
 #  Killing / Restarting Things  #
 #################################
