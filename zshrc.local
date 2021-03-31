@@ -115,9 +115,10 @@ plugins=(
   bundler
   osx
   rake
-  rbenv
   ruby
 )
+
+# unused_plugins=( rbenv )
 
 source $ZSH/oh-my-zsh.sh
 
