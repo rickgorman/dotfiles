@@ -45,3 +45,8 @@
 	required = true
 [branch]
 	autoSetupMerge = always
+
+[rerere]
+	enabled = true
+	# Reuse recorded resolution of conflicted merges
+	# see `man git-rerere'
