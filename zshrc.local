@@ -4,10 +4,7 @@ echo "*** now executing .zshrc.local"
 ### load extensions ###
 ########################
 
-source "$HOME/.bin/git-completion.sh"
-# source "$HOME/.bin/git-prompt.sh"
-source "$HOME/.bin/rake_autocomplete.sh"
-source "$HOME/.bin/bash_prompt.sh"
+#source "$HOME/.bin/bash_prompt.sh"
 
 #####################
 ### ENV variables ###
@@ -15,19 +12,22 @@ source "$HOME/.bin/bash_prompt.sh"
 
 # look for commands in these places
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
+export PATH="$HOME/.bin:$PATH"
 
 # make vim the default text editor
 export EDITOR="vim"
 
 # and atom the default visual editor (thanks mburns)
-export VISUAL="atom"
+export VISUAL="code"
+
+# nvm path stuff
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
 
 #############
 ### other ###
 #############
-
-# initialize rbenv
-# eval "$(rbenv init -)"
 
 # initialize nodenv
 eval "$(nodenv init -)"
@@ -35,6 +35,8 @@ eval "$(nodenv init -)"
 # heroku autocomplete setup
 HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setup && test -f $HEROKU_AC_BASH_SETUP_PATH && source $HEROKU_AC_BASH_SETUP_PATH;
 
+# git completion
+autoload -Uz compinit && compinit
 
 #################
 ### oh my zsh ###
@@ -113,16 +115,19 @@ ZSH_THEME="fino-time"
 plugins=(
   git
   bundler
-  osx
+  macos
   rake
   ruby
+  asdf
 )
 
 # unused_plugins=( rbenv )
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
+#################################
+# oh my zsh: User configuration #
+#################################
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -148,8 +153,15 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# aliases
+[[ -f ~/.aliases ]] && source ~/.aliases
+
 # bindings
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
 
 eval "$(direnv hook zsh)"
+
+################
+# Next section #
+################
