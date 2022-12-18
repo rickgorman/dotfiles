@@ -67,4 +67,13 @@ defaults write com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
 ###############################################################################
 ###############################################################################
 
+
+###############################################################################
+# Packages
+###############################################################################
+
+brew install alt-tab
+
+
+
 echo "Done. Note that some of these changes require a logout/restart to take effect."
