@@ -42,6 +42,10 @@
   'f16 h': 'window:focus-pane-on-left'
   'f16 l': 'window:focus-pane-on-right'
 
+  # folding/unfolding
+  'f16 ]': 'editor:unfold-all'
+  'f16 [': 'editor:fold-at-indent-level-1'
+
 'atom-workspace':
   # move panes
   'f16 cmd-j': 'move-panes:move-down'
