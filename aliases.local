@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "*** now executing aliases.local"
+
 ########################
 #  Package Mgmt        #
 ########################
@@ -153,7 +155,15 @@ alias h='heroku run'
 # Github              #
 #######################
 
-alias newpr='gh pr create --fill && gh pr view --web'
+newpr () {
+  local BASE_BRANCH="master"
+
+  if [ -n "$1" ]; then
+    BASE_BRANCH=$1
+  fi
+
+  gh pr create --fill -B "${BASE_BRANCH}" && gh pr view --web
+}
 
 #################################
 #  Killing / Restarting Things  #
@@ -162,4 +172,4 @@ alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{pri
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 
-kill9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
+k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
