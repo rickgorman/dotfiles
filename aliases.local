@@ -11,12 +11,13 @@ alias bbd="brew bundle dump --force"
 ########################
 #  Alias Controls      #
 ########################
-alias ba='vim ~/dotfiles-local/aliases.local && source ~/dotfiles-local/aliases.local'
+alias ba='vim ~/dotfiles-local/aliases.local && source ~/dotfiles-local/aliases.local && rcup'
 
 ########################
 #  Random              #
 ########################
 alias weather="curl wttr.in"
+alias wtr="curl wttr.in"
 
 # lock the screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
