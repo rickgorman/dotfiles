@@ -6,8 +6,7 @@
 # Add symlinks #
 ################
 
-ln -s p10k.zsh ~/.p10k.zsh
-
+ln -s ~/dotfiles-local/p10k.zsh ~/.p10k.zsh
 
 ##########
 # iTerm2 #
