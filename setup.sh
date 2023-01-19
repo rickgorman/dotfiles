@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# todo: check that this script is being called from the dotfiles-local dir
+
+################
+# Add symlinks #
+################
+
+ln -s p10k.zsh ~/.p10k.zsh
+
+
 ##########
 # iTerm2 #
 ##########
