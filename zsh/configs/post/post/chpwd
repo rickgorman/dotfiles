@@ -1,0 +1,4 @@
+# list a directory after cd-ing into it
+function chpwd {
+  ls
+}
