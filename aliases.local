@@ -40,7 +40,9 @@ alias ll='ls -laAF'
 # print all path entries, one per line
 alias path='echo -e ${PATH//:/\\n}'
 
-alias tc-www='cd ~/work/tc-www'
+alias web='cd ~/work/web'
+alias extension='cd ~/work/extension'
+
 ########################
 #  Utilities           #
 ########################
@@ -127,10 +129,9 @@ alias prl='hub pr list'
 ########################
 #  Bundle              #
 ########################
-alias bi='bundle install'
-alias be='bundle exec'
-alias bes='bundle exec spring'
-alias ber='bundle exec bin/rspec'
+alias be='/Users/me/.asdf/shims/bundle exec'
+alias bes='be spring'
+alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
 alias brc='be rails c'
 alias brs='be rails s'
@@ -173,3 +174,4 @@ alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
+
