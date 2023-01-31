@@ -32,7 +32,7 @@
 	pager = true
 [core]
 	excludesfile = ~/.gitignore
-	editor = atom --wait
+	editor = code --wait
 [push]
 	default = current
 [user]
