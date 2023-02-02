@@ -16,8 +16,8 @@ alias ba='$VISUAL ~/dotfiles-local/aliases.local --wait && source ~/dotfiles-loc
 ########################
 #  Random              #
 ########################
-alias weather="curl wttr.in"
-alias wtr="curl wttr.in"
+alias weather="curl wttr.in/?uF"
+alias wtr="weather"
 
 # lock the screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
