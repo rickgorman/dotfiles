@@ -18,6 +18,7 @@ alias ba='$VISUAL ~/dotfiles-local/aliases.local --wait && source ~/dotfiles-loc
 ########################
 alias weather="curl wttr.in/?uF"
 alias wtr="weather"
+alias cheat="curl cht.sh"
 
 # lock the screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
@@ -85,7 +86,7 @@ alias ga='git add'
 alias gd='git diff'
 alias gp='git push'
 alias gds='git diff --staged'
-alias gm='git fetch --all && git checkout master && git reset --hard origin/master && gem install bundler && bundle && yarn install && SKIP_YARN=1 be rake db:drop db:create && SKIP_YARN=1 be rake db:migrate && ENV_RAILS=test SKIP_YARN=1 be rake db:migrate && be rake db:drop RAILS_ENV=test && be rake db:create RAILS_ENV=test && be rake db:migrate RAILS_ENV=test'
+alias gm='git fetch --all && git checkout master && git reset --hard origin/master && gem install bundler && bundle && yarn install && SKIP_YARN=1 be rails db:drop db:create && SKIP_YARN=1 be rails db:migrate && ENV_RAILS=test SKIP_YARN=1 be rails db:migrate && be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
 alias gpushom='git push origin master'
 alias gpullom='git pull origin master'
 alias gsl='git stash list'
@@ -141,7 +142,7 @@ gpruneomg () {
 ########################
 # Rails                #
 ########################
-alias rake='rails'
+alias rails='rails'
 
 ########################
 #  Hub                 #
@@ -157,11 +158,11 @@ alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
 alias brc='be rails c'
 alias brs='be rails s'
-alias brdm='be rake db:migrate'
+alias brdm='be rails db:migrate'
 alias brdbm='brdm'
-alias brdbmr='be rake db:migrate; be rake db:rollback'
-alias brdbr='be rake db:drop RAILS_ENV=test && be rake db:create RAILS_ENV=test && be rake db:migrate RAILS_ENV=test'
-alias brr='be rake routes | fzf'
+alias brdbmr='be rails db:migrate; be rails db:rollback'
+alias brdbr='be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
+alias brr='be rails routes | fzf'
 ########################
 #  Database            #
 ########################
