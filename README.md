@@ -2,7 +2,10 @@
 
 ## Installation
 
-Manually symlink all the things!
+```
+cd dotfiles-local
+./setup.sh
+```
 
 ## Other Installation
 

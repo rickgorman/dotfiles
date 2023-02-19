@@ -8,6 +8,9 @@ echo "*** now executing .zshrc.local"
 autoload -U bashcompinit
 bashcompinit
 
+# auto-completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
 ########################
 ### load extensions ###
 ########################
@@ -36,9 +39,6 @@ export NVM_DIR="$HOME/.nvm"
 #############
 ### other ###
 #############
-
-# initialize nodenv
-eval "$(nodenv init -)"
 
 # heroku autocomplete setup
 HEROKU_AC_BASH_SETUP_PATH=/Users/me/Library/Caches/heroku/autocomplete/bash_setup && test -f $HEROKU_AC_BASH_SETUP_PATH && source $HEROKU_AC_BASH_SETUP_PATH;
