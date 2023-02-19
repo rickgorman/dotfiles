@@ -58,3 +58,12 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # p10k theme
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 cp -n fonts/*.ttf ~/Library/Fonts/
+
+########################
+# rails autocompletion #
+########################
+
+cd ~/temp
+gh repo clone mernen/completion-ruby
+cp completion-ruby/completion-ruby-all ~/dotfiles-local/
+rm -rf completion-ruby/
