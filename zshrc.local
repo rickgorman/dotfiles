@@ -30,6 +30,9 @@ autoload -Uz compinit && compinit
 
 #source "$HOME/.bin/bash_prompt.sh"
 
+# https://github.com/nvbn/thefuck
+eval $(thefuck --alias)
+
 #####################
 ### ENV variables ###
 #####################
@@ -132,6 +135,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  fzf-tab
   zsh-autosuggestions
   git
   bundler
@@ -140,8 +144,6 @@ plugins=(
   ruby
   asdf
 )
-
-# unused_plugins=( rbenv )
 
 source $ZSH/oh-my-zsh.sh
 
@@ -177,6 +179,19 @@ export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 # bindings
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
+
+# fzf-tab styling
+#################
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# preview directory's content with exa when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
 
 eval "$(direnv hook zsh)"
 
