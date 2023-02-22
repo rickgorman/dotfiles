@@ -24,11 +24,11 @@ alias cheat="curl cht.sh"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 alias yuri="Say -v Yuri"
+alias watchmerge="if gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
 ########################
 #  Navigation          #
 ########################
 alias .='pwd'
-alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias back='cd -'
@@ -72,10 +72,14 @@ alias c6="awk '{print \$6}'"
 alias c7="awk '{print \$7}'"
 alias c8="awk '{print \$8}'"
 alias c9="awk '{print \$9}'"
+alias c10="awk '{print \$10}'"
+alias c11="awk '{print \$11}'"
+alias c12="awk '{print \$12}'"
+alias c13="awk '{print \$13}'"
 
 ########################
 #  Git                 #
-########################
+#################ß######
 alias gad='git add . && git status'
 alias gadot='echo "deprecated -- use gad instead"; git add . && git status'
 alias gcm='git commit -m'
@@ -144,6 +148,7 @@ gpruneomg () {
 # Rails                #
 ########################
 alias rails='rails'
+alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 
 ########################
 #  Hub                 #
