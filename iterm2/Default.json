@@ -301,18 +301,18 @@
   },
   "Name" : "Default",
   "Blinking Cursor" : true,
-  "Guid" : "F22C794B-468E-45EA-9FC5-BD1C7F752665",
-  "Idle Code" : 0,
-  "Ansi 10 Color" : {
-    "Green Component" : "0.8862745",
-    "Red Component" : "0.5411764999999999",
-    "Blue Component" : "0.2039216"
-  },
+  "Guid" : "1CD36A29-D117-43D4-83FA-A6F51D48E581",
   "Ansi 8 Color" : {
     "Green Component" : "0.3411765",
     "Red Component" : "0.3333333",
     "Blue Component" : "0.3254902"
   },
+  "Ansi 10 Color" : {
+    "Green Component" : "0.8862745",
+    "Red Component" : "0.5411764999999999",
+    "Blue Component" : "0.2039216"
+  },
+  "Idle Code" : 0,
   "Badge Color" : {
     "Red Component" : 1,
     "Color Space" : "sRGB",
@@ -371,7 +371,7 @@
   "Unicode Version" : 9,
   "Screen" : -2,
   "HotKey Characters Ignoring Modifiers" : "e",
-  "Initial Use Transparency" : false,
+  "Initial Use Transparency" : true,
   "Non Ascii Font" : "MesloLGS-NF-Regular 12",
   "Ansi 13 Color" : {
     "Green Component" : "0.4980392",
@@ -384,8 +384,8 @@
   ],
   "Unicode Normalization" : 0,
   "Visual Bell" : true,
-  "ASCII Ligatures" : false,
   "Custom Directory" : "Recycle",
+  "ASCII Ligatures" : false,
   "Ansi 5 Color" : {
     "Green Component" : "0.3137255",
     "Red Component" : "0.4588235",
