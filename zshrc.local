@@ -143,6 +143,7 @@ plugins=(
   rake
   ruby
   asdf
+  alias-tips
 )
 
 source $ZSH/oh-my-zsh.sh

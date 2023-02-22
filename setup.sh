@@ -68,6 +68,9 @@ cp -n fonts/*.ttf ~/Library/Fonts/
 # fzf-tab
 git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
 
+# alias-tips
+git clone https://github.com/djui/alias-tips.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/alias-tips
+
 ########################
 # rails autocompletion #
 ########################
