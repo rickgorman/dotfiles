@@ -24,7 +24,7 @@ alias cheat="curl cht.sh"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 alias yuri="Say -v Yuri"
-alias watchmerge="if gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
+alias watchmerge="if sleep 2 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
 ########################
 #  Navigation          #
 ########################
