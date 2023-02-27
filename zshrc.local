@@ -7,6 +7,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+######################
+### Key remappings ###
+######################
+
+bindkey "^B" autosuggest-accept
+
+
 ###################
 ### shell setup ###
 ###################
@@ -24,9 +31,9 @@ autoload -Uz compinit && compinit
 # rails completion from https://github.com/mernen/completion-ruby
 [[ -r "~/.completion-ruby-all" ]] && . "~/.completion-ruby-all"
 
-########################
+#######################
 ### load extensions ###
-########################
+#######################
 
 #source "$HOME/.bin/bash_prompt.sh"
 
@@ -153,6 +160,7 @@ source $ZSH/oh-my-zsh.sh
 #################################
 
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+export ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#autosuggest-accept}")
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
