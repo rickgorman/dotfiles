@@ -37,7 +37,7 @@
 	default = current
 [user]
 	name = Rick Gorman
-	email = gormanite@gmail.com
+	email = rickgorman@users.noreply.github.com
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
