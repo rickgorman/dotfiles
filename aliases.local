@@ -151,6 +151,8 @@ gpruneomg () {
 ########################
 alias rails='rails'
 alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
+alias sp='RAILS_ENV=test rails parallel:spec'
+alias sr='RECORD_RUNTIME=true RAILS_ENV=test rails parallel:spec'
 
 ########################
 #  Hub                 #
