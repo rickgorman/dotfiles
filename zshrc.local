@@ -59,6 +59,9 @@ export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
 
+# default to main, allow overrides via dotenv
+export MASTER_BRANCH_NAME="main"
+
 #############
 ### other ###
 #############
@@ -151,6 +154,7 @@ plugins=(
   ruby
   asdf
   alias-tips
+  dotenv
 )
 
 source $ZSH/oh-my-zsh.sh
