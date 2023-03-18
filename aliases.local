@@ -12,6 +12,7 @@ alias bbd="brew bundle dump --force"
 #  Alias Controls      #
 ########################
 alias ba='$VISUAL ~/dotfiles-local/aliases.local --wait && source ~/dotfiles-local/aliases.local && rcup'
+alias src='source ~/dotfiles-local/aliases.local'
 
 ########################
 #  Random              #
