@@ -189,13 +189,13 @@ alias h='heroku run'
 #######################
 
 newpr () {
-  local BASE_BRANCH="master"
+  local BASE_BRANCH="${MASTER_BRANCH_NAME}"
 
   if [ -n "$1" ]; then
     BASE_BRANCH=$1
   fi
 
-  gh pr create --fill -B "${BASE_BRANCH}" && gh pr view --web
+  gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
 }
 
 #################################
