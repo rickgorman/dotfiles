@@ -62,6 +62,10 @@ defaults write -g InitialKeyRepeat -int 15
 # Increase repeat rate. Normal minimum is 2 (30 ms). Increments of 15ms.
 defaults write -g KeyRepeat -int 1
 
+
+# Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
 ###############################################################################
 # App-specific Settings
 ###############################################################################
