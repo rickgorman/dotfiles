@@ -51,7 +51,6 @@ sudo chflags nohidden /Volumes
 # Disable creation of .DS_store files
 defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
-
 ###############################################################################
 # Keyboard / Input                                                            #
 ###############################################################################
@@ -77,13 +76,6 @@ defaults write com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
 
 ###############################################################################
 ###############################################################################
-
-
-###############################################################################
-# Packages
-###############################################################################
-
-brew install alt-tab
 
 # Kill affected apps
 for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
