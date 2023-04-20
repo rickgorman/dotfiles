@@ -26,6 +26,7 @@
 ln -s ~/dotfiles-local/p10k.zsh ~/.p10k.zsh
 ln -s ~/dotfiles-local/pryrc ~/.pryrc
 ln -s ~/dotfiles-local/rspec ~/.rspec
+ln -s ~/dotfiles-local/config/karabiner ~/.config/karabiner
 
 # this will rebuild symlinks; use from cli when needed
 rcup
