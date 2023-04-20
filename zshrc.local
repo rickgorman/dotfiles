@@ -13,7 +13,6 @@ fi
 
 bindkey "^B" autosuggest-accept
 
-
 ###################
 ### shell setup ###
 ###################
