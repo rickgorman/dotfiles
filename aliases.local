@@ -25,7 +25,7 @@ alias cheat="curl cht.sh"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 alias yuri="Say -v Yuri"
-alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
+
 ########################
 #  Navigation          #
 ########################
@@ -109,20 +109,10 @@ alias grs='git rebase --skip'
 alias gbg='git bisect good'
 alias gbb='git bisect bad'
 alias grim='git rebase -i ${MASTER_BRANCH_NAME}'
+alias main='git checkout main && g pull'
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
-
-# make `g` behave like `git status` with no args, or `git` with args
-# g () {
-#   if [ $# -eq 0 ]
-#   then
-#     git status
-#   else
-#     git "$@"
-#   fi
-# }
-# __git_complete g _git
 
 # prune stale local branches in a rather destructive way
 gpruneomg () {
@@ -144,6 +134,7 @@ gpruneomg () {
   $VISUAL /tmp/branches_to_prune.txt --wait
 
   cat /tmp/branches_to_prune.txt | grep -v "#" | xargs -L 1 git
+}
 
 ########################
 # Rails                #
@@ -157,7 +148,7 @@ alias sof='RAILS_ENV=test bin/rspec --only-failures'
 ########################
 #  Bundle              #
 ########################
-alias be='/Users/me/.asdf/shims/bundle exec'
+alias be='~/.asdf/shims/bundle exec'
 alias bes='be spring'
 alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
@@ -168,6 +159,7 @@ alias brdbm='brdm'
 alias brdbmr='be rails db:migrate; be rails db:rollback'
 alias brdbr='be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
 alias brr='be rails routes | fzf'
+
 ########################
 #  Database            #
 ########################
@@ -193,9 +185,13 @@ newpr () {
   gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
 }
 
+alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
+alias ready="gh pr ready && gh pr edit --add-reviewer VersaTrial/engineers"
+
 #################################
 #  Killing / Restarting Things  #
 #################################
+
 alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
@@ -205,4 +201,5 @@ k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 ######################
 # Depoliticize tools #
 ######################
+
 alias i18n="bundle exec i18n-tasks 2>/dev/null"
