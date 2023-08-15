@@ -144,7 +144,6 @@ gpruneomg () {
   $VISUAL /tmp/branches_to_prune.txt --wait
 
   cat /tmp/branches_to_prune.txt | grep -v "#" | xargs -L 1 git
-}
 
 ########################
 # Rails                #
