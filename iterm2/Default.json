@@ -23,7 +23,6 @@
     "Green Component" : 0.759521484375
   },
   "HotKey Window Floats" : true,
-  "Use Custom Window Title" : false,
   "Right Option Key Sends" : 0,
   "Show Status Bar" : false,
   "Character Encoding" : 4,
@@ -51,6 +50,7 @@
     "telnet"
   ],
   "Scrollback Lines" : 0,
+  "Scrollback in Alternate Screen" : false,
   "HotKey Window Reopens On Activation" : false,
   "Draw Powerline Glyphs" : false,
   "Status Bar Layout" : {
@@ -300,7 +300,7 @@
     "Red Component" : "0",
     "Blue Component" : "0"
   },
-  "HotKey Window Dock Click Action" : 2,
+  "HotKey Window Dock Click Action" : 0,
   "Default Bookmark" : "No",
   "Cursor Color" : {
     "Green Component" : "1",

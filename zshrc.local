@@ -181,9 +181,9 @@ export ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#aut
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# bindings
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
+# bindings (commented out to avoid conflict with McFly)
+# bindkey '^[[A' up-line-or-search
+# bindkey '^[[B' down-line-or-search
 
 ###################
 # fzf-tab styling #
@@ -213,3 +213,4 @@ eval "$(direnv hook zsh)"
 # Next section #
 ################
 
+eval "$(mcfly init zsh)"

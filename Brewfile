@@ -22,6 +22,7 @@ brew "python@3.9"
 brew "tcl-tk"
 brew "glib"
 brew "lynx"
+brew "mcfly"
 brew "ncdu"
 brew "nmap"
 brew "node", link: false
