@@ -227,4 +227,6 @@ k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 # Depoliticize tools #
 ######################
 
-alias i18n='bundle exec i18n-tasks "$A" 2>/dev/null'
+i18n() {
+  i18n-tasks "$@" 2>/dev/null
+}
