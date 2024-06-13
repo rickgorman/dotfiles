@@ -177,7 +177,7 @@ alias h='heroku run'
 # Github              #
 #######################
 
-newpr () {
+newpr_old () {
   local BASE_BRANCH="${MASTER_BRANCH_NAME}"
 
   if [ -n "$1" ]; then
@@ -187,7 +187,7 @@ newpr () {
   gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
 }
 
-newpr2 () {
+newpr () {
     local BASE_BRANCH="${MASTER_BRANCH_NAME}"
 
     if [ -n "$1" ]; then
