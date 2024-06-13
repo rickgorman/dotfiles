@@ -63,7 +63,6 @@ alias sum="jq -s 'add'"
 # ex:  ls -l | slice 5 9  => 9577 awesomefile.txt
 slice() {
   AWK_PARAMS=`echo "$@" | sed 's/\([0-9]*\)/\\\$\1" "/g'`
-  echo $AWK_PARAMS
   awk "{print $AWK_PARAMS}"
 }
 
