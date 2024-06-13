@@ -164,6 +164,8 @@ alias brr='be rails routes | fzf'
 #  Database            #
 ########################
 
+alias k9postgres='brew services stop postgresql@14; ps -ef | grep postgres | c2 | xargs kill -9; brew services start postgresql@14'
+
 ########################
 #  Heroku              #
 ########################
