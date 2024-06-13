@@ -55,6 +55,10 @@ alias extension='cd ~/work/extension'
 # find . -name .gitattributes | map dirname
 alias map="xargs -n1"
 
+# Sum function - adds a series of numbers
+# ex:  echo "1 2 3" | sum => 6
+alias sum="jq -s 'add'"
+
 # Slice function - extracts columns from output
 # ex:  ls -l | slice 5 9  => 9577 awesomefile.txt
 slice() {
@@ -140,7 +144,6 @@ gpruneomg () {
 # Rails                #
 ########################
 alias rails='rails'
-alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 alias sp='RAILS_ENV=test rails parallel:spec'
 alias sr='RECORD_RUNTIME=true RAILS_ENV=test rails parallel:spec'
 alias sof='RAILS_ENV=test bin/rspec --only-failures'
@@ -164,8 +167,6 @@ alias brr='be rails routes | fzf'
 #  Database            #
 ########################
 
-alias k9postgres='brew services stop postgresql@14; ps -ef | grep postgres | c2 | xargs kill -9; brew services start postgresql@14'
-
 ########################
 #  Heroku              #
 ########################
@@ -187,8 +188,29 @@ newpr () {
   gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
 }
 
-alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
+newpr2 () {
+    local BASE_BRANCH="${MASTER_BRANCH_NAME}"
+
+    if [ -n "$1" ]; then
+      BASE_BRANCH=$1
+    fi
+
+    # Create a temporary file to hold the commit log in Markdown format.
+    local TEMP_FILE=$(mktemp)
+
+    # Capture commit logs into the temporary file with Markdown formatting.
+    git log "${BASE_BRANCH}..HEAD" --pretty=format:"%s%n---%n%b%n%n" > "${TEMP_FILE}"
+
+    # Create the PR using the temporary file as the body, formatted in Markdown.
+    gh pr create --fill -B "${BASE_BRANCH}" --body-file "${TEMP_FILE}" && gh pr ready --undo && gh pr view --web
+
+    # Clean up the temporary file.
+    rm "${TEMP_FILE}"
+}
+
+alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
 alias ready="gh pr ready && gh pr edit --add-reviewer VersaTrial/engineers"
+alias rdy="ready"
 
 #################################
 #  Killing / Restarting Things  #
@@ -197,6 +219,8 @@ alias ready="gh pr ready && gh pr edit --add-reviewer VersaTrial/engineers"
 alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
+alias k9postgres='brew services stop postgresql@14; k9 postgres; brew services start postgresql@14'
+alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 
@@ -204,4 +228,4 @@ k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 # Depoliticize tools #
 ######################
 
-alias i18n="bundle exec i18n-tasks 2>/dev/null"
+alias i18n='bundle exec i18n-tasks "$A" 2>/dev/null'
