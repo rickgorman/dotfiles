@@ -21,10 +21,6 @@ bindkey "^B" autosuggest-accept
 autoload -U bashcompinit
 bashcompinit
 
-# synchronize history across terminals https://web.archive.org/web/20090815205011/http://www.cuberick.com/2008/11/update-bash-history-in-realtime.html
-shopt -s histappend
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-
 # git completion
 autoload -Uz compinit && compinit
 
