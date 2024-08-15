@@ -5,70 +5,70 @@
     "command": "gitlens.toggleFileBlame"
   },
   {
-      "key": "alt+cmd+b",
-      "command": "-bookmarks.toggle",
-      "when": "editorTextFocus"
+    "key": "alt+cmd+b",
+    "command": "-bookmarks.toggle",
+    "when": "editorTextFocus"
   },
   {
-      "key": "cmd+\\",
-      "command": "workbench.action.toggleSidebarVisibility"
+    "key": "cmd+\\",
+    "command": "workbench.action.toggleSidebarVisibility"
   },
   {
-      "key": "cmd+b",
-      "command": "-workbench.action.toggleSidebarVisibility"
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
   },
   {
-      "key": "cmd+\\",
-      "command": "-workbench.action.splitEditor"
+    "key": "cmd+\\",
+    "command": "-workbench.action.splitEditor"
   },
   {
-      "key": "ctrl+shift+9",
-      "command": "workbench.action.toggleAuxiliaryBar"
+    "key": "ctrl+shift+9",
+    "command": "workbench.action.toggleAuxiliaryBar"
   },
   {
-      "key": "shift+cmd+\\",
-      "command": "-editor.action.jumpToBracket",
-      "when": "editorTextFocus"
+    "key": "shift+cmd+\\",
+    "command": "-editor.action.jumpToBracket",
+    "when": "editorTextFocus"
   },
   {
-      "key": "shift+cmd+\\",
-      "command": "workbench.files.action.showActiveFileInExplorer"
+    "key": "shift+cmd+\\",
+    "command": "workbench.files.action.showActiveFileInExplorer"
   },
   {
-      "key": "f16 right",
-      "command": "-workbench.action.moveActiveEditorGroupRight"
+    "key": "f16 right",
+    "command": "-workbench.action.moveActiveEditorGroupRight"
   },
   {
-      "key": "f16 right",
-      "command": "workbench.action.navigateRight"
+    "key": "f16 right",
+    "command": "workbench.action.navigateRight"
   },
   {
-      "key": "f16 left",
-      "command": "workbench.action.navigateLeft"
+    "key": "f16 left",
+    "command": "workbench.action.navigateLeft"
   },
   {
-      "key": "f16 down",
-      "command": "workbench.action.navigateDown"
+    "key": "f16 down",
+    "command": "workbench.action.navigateDown"
   },
   {
-      "key": "f16 up",
-      "command": "workbench.action.navigateUp"
+    "key": "f16 up",
+    "command": "workbench.action.navigateUp"
   },
   {
-      "key": "f16 shift+up",
-      "command": "workbench.action.splitEditorUp"
+    "key": "f16 shift+up",
+    "command": "workbench.action.splitEditorUp"
   },
   {
-      "key": "f16 shift+down",
-      "command": "workbench.action.splitEditorDown"
+    "key": "f16 shift+down",
+    "command": "workbench.action.splitEditorDown"
   },
   {
-      "key": "f16 shift+right",
-      "command": "workbench.action.splitEditorRight"
+    "key": "f16 shift+right",
+    "command": "workbench.action.splitEditorRight"
   },
   {
-      "key": "f16 shift+left",
-      "command": "workbench.action.splitEditorLeft"
+    "key": "f16 shift+left",
+    "command": "workbench.action.splitEditorLeft"
   },
   {
     "key": "cmd+t",
@@ -454,5 +454,9 @@
     "key": "alt+b",
     "command": "-gitlens.toggleFileBlame",
     "when": "editorTextFocus && config.gitlens.keymap == 'alternate' && resource in 'gitlens:tabs:blameable'"
+  },
+  {
+    "key": "f16 shift+c",
+    "command": "workbench.panel.chat.view.copilot.focus"
   }
 ]
