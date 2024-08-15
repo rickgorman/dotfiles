@@ -259,5 +259,8 @@
   "rubyLsp.featuresConfiguration": {},
   "rubyLsp.formatter": "rubocop",
   "rubyLsp.enableExperimentalFeatures": true,
-  "workbench.activityBar.location": "top"
+  "workbench.activityBar.location": "top",
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
