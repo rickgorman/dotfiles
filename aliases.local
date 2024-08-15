@@ -188,23 +188,23 @@ newpr_old () {
 }
 
 newpr () {
-    local BASE_BRANCH="${MASTER_BRANCH_NAME}"
+  local BASE_BRANCH="${MASTER_BRANCH_NAME}"
 
-    if [ -n "$1" ]; then
-      BASE_BRANCH=$1
-    fi
+  if [ -n "$1" ]; then
+    BASE_BRANCH=$1
+  fi
 
-    # Create a temporary file to hold the commit log in Markdown format.
-    local TEMP_FILE=$(mktemp)
+  # Create a temporary file to hold the commit log in Markdown format.
+  local TEMP_FILE=$(mktemp)
 
-    # Capture commit logs into the temporary file with Markdown formatting.
-    git log "${BASE_BRANCH}..HEAD" --pretty=format:"%s%n---%n%b%n%n" > "${TEMP_FILE}"
+  # Capture commit logs into the temporary file with Markdown formatting.
+  git log "${BASE_BRANCH}..HEAD" --pretty=format:"%s%n---%n%b%n%n" > "${TEMP_FILE}"
 
-    # Create the PR using the temporary file as the body, formatted in Markdown.
-    gh pr create --fill -B "${BASE_BRANCH}" --body-file "${TEMP_FILE}" && gh pr ready --undo && gh pr view --web
+  # Create the PR using the temporary file as the body, formatted in Markdown.
+  gh pr create --fill -B "${BASE_BRANCH}" --body-file "${TEMP_FILE}" && gh pr ready --undo && gh pr view --web
 
-    # Clean up the temporary file.
-    rm "${TEMP_FILE}"
+  # Clean up the temporary file.
+  rm "${TEMP_FILE}"
 }
 
 alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
