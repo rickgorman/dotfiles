@@ -1,3 +1,7 @@
+[absorb]
+  maxStack = 20
+  oneFixupPerCommit = true
+  autoStageIfNothingStaged = true
 [alias]
 	a = add
 	aa = add --all :/

@@ -25,7 +25,7 @@ alias cheat="curl cht.sh"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 alias yuri="Say -v Yuri"
-alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; fi"
+
 ########################
 #  Navigation          #
 ########################
@@ -55,11 +55,14 @@ alias extension='cd ~/work/extension'
 # find . -name .gitattributes | map dirname
 alias map="xargs -n1"
 
+# Sum function - adds a series of numbers
+# ex:  echo "1 2 3" | sum => 6
+alias sum="jq -s 'add'"
+
 # Slice function - extracts columns from output
 # ex:  ls -l | slice 5 9  => 9577 awesomefile.txt
 slice() {
   AWK_PARAMS=`echo "$@" | sed 's/\([0-9]*\)/\\\$\1" "/g'`
-  echo $AWK_PARAMS
   awk "{print $AWK_PARAMS}"
 }
 
@@ -109,20 +112,10 @@ alias grs='git rebase --skip'
 alias gbg='git bisect good'
 alias gbb='git bisect bad'
 alias grim='git rebase -i ${MASTER_BRANCH_NAME}'
+alias main='git checkout main && g pull'
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
-
-# make `g` behave like `git status` with no args, or `git` with args
-# g () {
-#   if [ $# -eq 0 ]
-#   then
-#     git status
-#   else
-#     git "$@"
-#   fi
-# }
-# __git_complete g _git
 
 # prune stale local branches in a rather destructive way
 gpruneomg () {
@@ -150,19 +143,14 @@ gpruneomg () {
 # Rails                #
 ########################
 alias rails='rails'
-alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 alias sp='RAILS_ENV=test rails parallel:spec'
 alias sr='RECORD_RUNTIME=true RAILS_ENV=test rails parallel:spec'
-
-########################
-#  Hub                 #
-########################
-alias prl='hub pr list'
+alias sof='RAILS_ENV=test bin/rspec --only-failures'
 
 ########################
 #  Bundle              #
 ########################
-alias be='/Users/me/.asdf/shims/bundle exec'
+alias be='~/.asdf/shims/bundle exec'
 alias bes='be spring'
 alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
@@ -173,6 +161,7 @@ alias brdbm='brdm'
 alias brdbmr='be rails db:migrate; be rails db:rollback'
 alias brdbr='be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
 alias brr='be rails routes | fzf'
+
 ########################
 #  Database            #
 ########################
@@ -188,7 +177,7 @@ alias h='heroku run'
 # Github              #
 #######################
 
-newpr () {
+newpr_old () {
   local BASE_BRANCH="${MASTER_BRANCH_NAME}"
 
   if [ -n "$1" ]; then
@@ -198,16 +187,73 @@ newpr () {
   gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
 }
 
+newpr () {
+    local BASE_BRANCH="${MASTER_BRANCH_NAME}"
+
+    if [ -n "$1" ]; then
+      BASE_BRANCH=$1
+    fi
+
+    # Create a temporary file to hold the commit log in Markdown format.
+    local TEMP_FILE=$(mktemp)
+
+    # Capture commit logs into the temporary file with Markdown formatting.
+    git log "${BASE_BRANCH}..HEAD" --pretty=format:"%s%n---%n%b%n%n" > "${TEMP_FILE}"
+
+    # Create the PR using the temporary file as the body, formatted in Markdown.
+    gh pr create --fill -B "${BASE_BRANCH}" --body-file "${TEMP_FILE}" && gh pr ready --undo && gh pr view --web
+
+    # Clean up the temporary file.
+    rm "${TEMP_FILE}"
+}
+
+alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
+alias ready="gh pr ready && gh pr edit --add-reviewer FlorenceHC/hedgehog"
+alias rdy="ready"
+alias checks="i18n-tasks health && i18n-tasks normalize && rubocop -a"
+
 #################################
 #  Killing / Restarting Things  #
 #################################
+
 alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
 alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
+alias k9postgres='brew services stop postgresql@14; k9 postgres; brew services start postgresql@14'
+alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 
 ######################
 # Depoliticize tools #
 ######################
-alias i18n="bundle exec i18n-tasks 2>/dev/null"
+
+i18n() {
+  i18n-tasks "$@" 2>/dev/null
+}
+
+#################
+# Video editing #
+#################
+
+ffmpeg_two_pass() {
+  local input_file="$1"
+  local base_name="${input_file%.*}"
+  local temp_output="${base_name}_temp.mp4"
+  local final_output="${base_name}_pass_2.mp4"
+  local temp_files=("ffmpeg2pass-0.log" "ffmpeg2pass-0.log.mbtree")
+
+  # First pass
+  ffmpeg -i "$input_file" -pass 1 -r 15 -c:v h264 -c:a aac -b:v 200k -strict normal "$temp_output"
+
+  # Second pass
+  ffmpeg -i "$temp_output" -pass 2 -r 15 -c:v h264 -c:a aac -b:v 100k -strict normal "$final_output"
+
+  # Clean up temporary files
+  rm "$temp_output"
+  for temp_file in "${temp_files[@]}"; do
+    [ -f "$temp_file" ] && rm "$temp_file"
+  done
+
+  echo "Processing complete. Output file: $final_output"
+}

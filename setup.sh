@@ -26,6 +26,14 @@
 ln -s ~/dotfiles-local/p10k.zsh ~/.p10k.zsh
 ln -s ~/dotfiles-local/pryrc ~/.pryrc
 ln -s ~/dotfiles-local/rspec ~/.rspec
+ln -s ~/dotfiles-local/config/karabiner ~/.config/karabiner
+
+# VSCode things
+mv ~/Library/Application\ Support/Code/User/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json.bak
+ln -s ~/dotfiles-local/code/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json
+mv ~/Library/Application\ Support/Code/User/settings.json ~/Library/Application\ Support/Code/User/settings.json.bak
+ln -s ~/dotfiles-local/code/settings.json ~/Library/Application\ Support/Code/User/settings.json
+
 
 # this will rebuild symlinks; use from cli when needed
 rcup

@@ -13,7 +13,6 @@ fi
 
 bindkey "^B" autosuggest-accept
 
-
 ###################
 ### shell setup ###
 ###################
@@ -35,8 +34,6 @@ autoload -Uz compinit && compinit
 ### load extensions ###
 #######################
 
-#source "$HOME/.bin/bash_prompt.sh"
-
 # https://github.com/nvbn/thefuck
 eval $(thefuck --alias)
 
@@ -51,7 +48,7 @@ export PATH="$HOME/.bin:$PATH"
 # make vim the default text editor
 export EDITOR="vim"
 
-# and atom the default visual editor (thanks mburns)
+# and vscode the default visual editor (thanks mburns)
 export VISUAL="code"
 
 # nvm path stuff
@@ -180,21 +177,14 @@ export ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#aut
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# bindings (commented out to avoid conflict with McFly)
+# bindkey '^[[A' up-line-or-search
+# bindkey '^[[B' down-line-or-search
 
-# bindings
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
+###################
+# fzf-tab styling #
+###################
 
-# fzf-tab styling
-#################
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
@@ -219,3 +209,4 @@ eval "$(direnv hook zsh)"
 # Next section #
 ################
 
+eval "$(mcfly init zsh)"

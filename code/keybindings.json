@@ -1,17 +1,11 @@
-// Place your key bindings in this file to override the defaultsauto[]
+// 1 Place your key bindings in this file to override the defaultsauto[]
 [
   {
-      "key": "ctrl+b",
-      "command": "-cursorLeft",
-      "when": "textInputFocus"
+    "key": "ctrl+b",
+    "command": "gitlens.toggleFileBlame"
   },
   {
-      "key": "ctrl+b",
-      "command": "bookmarks.toggle",
-      "when": "editorTextFocus"
-  },
-  {
-      "key": "alt+cmd+k",
+      "key": "alt+cmd+b",
       "command": "-bookmarks.toggle",
       "when": "editorTextFocus"
   },
@@ -41,7 +35,7 @@
       "command": "workbench.files.action.showActiveFileInExplorer"
   },
   {
-      "key": "cmd+k right",
+      "key": "f16 right",
       "command": "-workbench.action.moveActiveEditorGroupRight"
   },
   {
@@ -138,7 +132,7 @@
     "command": "workbench.action.nextEditorInGroup"
   },
   {
-    "key": "cmd+k alt+cmd+right",
+    "key": "f16 alt+cmd+right",
     "command": "-workbench.action.nextEditorInGroup"
   },
   {
@@ -146,7 +140,7 @@
     "command": "workbench.action.previousEditorInGroup"
   },
   {
-    "key": "cmd+k alt+cmd+left",
+    "key": "f16 alt+cmd+left",
     "command": "-workbench.action.previousEditorInGroup"
   },
   {
@@ -165,11 +159,11 @@
     "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
   },
   {
-    "key": "cmd+k shift+cmd+s",
+    "key": "f16 shift+cmd+s",
     "command": "workbench.action.openGlobalKeybindings"
   },
   {
-    "key": "cmd+k cmd+s",
+    "key": "f16 cmd+s",
     "command": "-workbench.action.openGlobalKeybindings"
   },
   {
@@ -178,7 +172,7 @@
     "when": "isInDiffEditor"
   },
   {
-    "key": "cmd+k alt+cmd+s",
+    "key": "f16 alt+cmd+s",
     "command": "-git.stageSelectedRanges",
     "when": "isInDiffEditor"
   },
@@ -188,7 +182,7 @@
     "when": "isInDiffEditor"
   },
   {
-    "key": "cmd+k cmd+n",
+    "key": "f16 cmd+n",
     "command": "-git.unstageSelectedRanges",
     "when": "isInDiffEditor"
   },
@@ -206,7 +200,7 @@
     "command": "workbench.action.focusLeftGroup"
   },
   {
-    "key": "cmd+k cmd+left",
+    "key": "f16 cmd+left",
     "command": "-workbench.action.focusLeftGroup"
   },
   {
@@ -214,7 +208,7 @@
     "command": "workbench.action.focusRightGroup"
   },
   {
-    "key": "cmd+k cmd+right",
+    "key": "f16 cmd+right",
     "command": "-workbench.action.focusRightGroup"
   },
   {
@@ -222,7 +216,7 @@
     "command": "workbench.action.focusAboveGroup"
   },
   {
-    "key": "cmd+k cmd+up",
+    "key": "f16 cmd+up",
     "command": "-workbench.action.focusAboveGroup"
   },
   {
@@ -230,11 +224,11 @@
     "command": "workbench.action.focusBelowGroup"
   },
   {
-    "key": "cmd+k cmd+down",
+    "key": "f16 cmd+down",
     "command": "-workbench.action.focusBelowGroup"
   },
   {
-    "key": "cmd+k right",
+    "key": "f16 right",
     "command": "workbench.action.moveActiveEditorGroupRight"
   },
   {
@@ -252,11 +246,11 @@
     "when": "editorTextFocus"
   },
   {
-    "key": "cmd+k shift+cmd+right",
+    "key": "f16 shift+cmd+right",
     "command": "-workbench.action.moveEditorRightInGroup"
   },
   {
-    "key": "cmd+k shift+cmd+left",
+    "key": "f16 shift+cmd+left",
     "command": "-workbench.action.moveEditorLeftInGroup"
   },
   {
@@ -268,19 +262,11 @@
     "command": "workbench.action.moveEditorToRightGroup"
   },
   {
-    "key": "f16 shift+j",
-    "command": "workbench.action.moveActiveEditorGroupDown"
-  },
-  {
-    "key": "cmd+k down",
+    "key": "f16 down",
     "command": "-workbench.action.moveActiveEditorGroupDown"
   },
   {
-    "key": "f16 shift+k",
-    "command": "workbench.action.moveActiveEditorGroupUp"
-  },
-  {
-    "key": "cmd+k up",
+    "key": "f16 up",
     "command": "-workbench.action.moveActiveEditorGroupUp"
   },
   {
@@ -292,5 +278,181 @@
     "key": "alt+\\",
     "command": "-editor.action.inlineSuggest.trigger",
     "when": "config.github.copilot.inlineSuggest.enable && editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
+  },
+  {
+    "key": "f16 g",
+    "command": "workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "key": "f16 z",
+    "command": "workbench.action.toggleZenMode"
+  },
+  {
+    "key": "f16 z",
+    "command": "-workbench.action.toggleZenMode"
+  },
+  {
+    "key": "f16 f",
+    "command": "workbench.action.minimizeOtherEditors"
+  },
+  {
+    "key": "f16 shift+k",
+    "command": "workbench.action.moveEditorToAboveGroup"
+  },
+  {
+    "key": "f16 shift+j",
+    "command": "workbench.action.moveEditorToBelowGroup"
+  },
+  {
+    "key": "alt+t",
+    "command": "workbench.action.quickOpen"
+  },
+  {
+    "key": "f16 b",
+    "command": "gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'alternate' && gitlens:activeFileStatus =~ /blameable/"
+  },
+  {
+    "key": "alt+b",
+    "command": "-gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'alternate' && gitlens:activeFileStatus =~ /blameable/"
+  },
+  {
+    "key": "f16 b",
+    "command": "gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'chorded' && gitlens:activeFileStatus =~ /blameable/"
+  },
+  {
+    "key": "alt+cmd+g b",
+    "command": "-gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'chorded' && gitlens:activeFileStatus =~ /blameable/"
+  },
+  {
+    "key": "f16 \\",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "f16 d",
+    "command": "editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+  },
+  {
+    "key": "f16 u",
+    "command": "extension.jumpy-word"
+  },
+  {
+    "key": "f16 f16 g",
+    "command": "extension.jumpy-word"
+  },
+  {
+    "key": "shift+alt+p",
+    "command": "workbench.action.showCommands"
+  },
+  {
+    "key": "f16 shift+r",
+    "command": "railsTestRunner.runTestAtLine"
+  },
+  {
+    "key": "f16 shift+m",
+    "command": "kb-macro.startRecording",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+alt+r",
+    "command": "-kb-macro.startRecording",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+shift+alt+r",
+    "command": "-kb-macro.finishRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option2'"
+  },
+  {
+    "key": "ctrl+shift+alt+r",
+    "command": "-kb-macro.startRecording",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option2'"
+  },
+  {
+    "key": "f16 shift+m",
+    "command": "kb-macro.finishRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+alt+r",
+    "command": "-kb-macro.finishRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+shift+alt+p",
+    "command": "-kb-macro.cancelRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option2'"
+  },
+  {
+    "key": "f16 x",
+    "command": "kb-macro.cancelRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+alt+p",
+    "command": "-kb-macro.cancelRecording",
+    "when": "kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+shift+alt+p",
+    "command": "-kb-macro.playback",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option2'"
+  },
+  {
+    "key": "f16 m",
+    "command": "kb-macro.playback",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "ctrl+alt+p",
+    "command": "-kb-macro.playback",
+    "when": "!kb-macro.recording && config.keyboardMacro.recordingShortcuts == 'Option1'"
+  },
+  {
+    "key": "f16 r",
+    "command": "railsTestRunner.runLastTests"
+  },
+  {
+    "key": "f16 x",
+    "command": "editor.action.deleteLines",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "shift+f16",
+    "command": "-editor.action.deleteLines",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "f12",
+    "command": "-editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+  },
+  {
+    "key": "shift+alt+f12",
+    "command": "-references-view.findReferences",
+    "when": "editorHasReferenceProvider"
+  },
+  {
+    "key": "f16 shift+g",
+    "command": "github.copilot.interactiveEditor.generate"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "-kb-macro.wrap",
+    "when": "kb-macro.active && textInputFocus"
+  },
+  {
+    "key": "f16 b",
+    "command": "gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'alternate' && resource in 'gitlens:tabs:blameable'"
+  },
+  {
+    "key": "alt+b",
+    "command": "-gitlens.toggleFileBlame",
+    "when": "editorTextFocus && config.gitlens.keymap == 'alternate' && resource in 'gitlens:tabs:blameable'"
   }
 ]

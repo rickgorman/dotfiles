@@ -10,7 +10,6 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-
 ###############################################################################
 # Screen                                                                      #
 ###############################################################################
@@ -29,6 +28,12 @@ defaults write com.apple.finder ShowStatusBar -bool true
 
 # Finder: show path bar
 defaults write com.apple.finder ShowPathbar -bool true
+
+# Finder: Expand save dialog by default
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+
+# Finder: show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Use list view in all Finder windows by default
 # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
@@ -56,6 +61,12 @@ defaults write -g InitialKeyRepeat -int 15
 # Increase repeat rate. Normal minimum is 2 (30 ms). Increments of 15ms.
 defaults write -g KeyRepeat -int 1
 
+# Favor key repeat over key hold
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
 ###############################################################################
 # App-specific Settings
 ###############################################################################
@@ -63,17 +74,10 @@ defaults write -g KeyRepeat -int 1
 # Disble slack auto-updates (mostly to disable annoying notifications)
 defaults write com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
 
-
 ###############################################################################
 ###############################################################################
 
-
-###############################################################################
-# Packages
-###############################################################################
-
-brew install alt-tab
-
-
+# Kill affected apps
+for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."
