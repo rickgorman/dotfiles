@@ -1,266 +1,267 @@
+
 {
-  "workbench.tree.indent": 15,
-  "workbench.colorCustomizations": {
-    "tree.indentGuidesStroke": "#4f5959",
-    "editorRuler.foreground": "#ffffff0f",
-    "editorError.foreground": "#b3b3ffcf",
-    "editorWarning.foreground": "#ffc40090",
-    "editorInfo.foreground": "#35ffab90",
-    "tab.unfocusedActiveBorder": "#000000",
-    "tab.unfocusedActiveBorderTop": "#000000",
-    "tab.activeBackground": "#009dffb7",
-    "tab.unfocusedActiveBackground": "#fbfbfb26",
-    "gitDecoration.modifiedResourceForeground": "#ffe080",
-    "statusBar.foreground": "#ffffff",
+    "workbench.tree.indent": 15,
+    "workbench.colorCustomizations": {
+      "tree.indentGuidesStroke": "#4f5959",
+      "editorRuler.foreground": "#ffffff0f",
+      "editorError.foreground": "#b3b3ffcf",
+      "editorWarning.foreground": "#ffc40090",
+      "editorInfo.foreground": "#35ffab90",
+      "tab.unfocusedActiveBorder": "#000000",
+      "tab.unfocusedActiveBorderTop": "#000000",
+      "tab.activeBackground": "#009dffb7",
+      "tab.unfocusedActiveBackground": "#fbfbfb26",
+      "gitDecoration.modifiedResourceForeground": "#ffe080",
+      "statusBar.foreground": "#ffffff",
 
-    /* copilot */
-    // "editorGhostText.border": "#33ff003f",
-    "editorGhostText.foreground": "#33ff0032",
+      /* copilot */
+      // "editorGhostText.border": "#33ff003f",
+      "editorGhostText.foreground": "#33ff0032",
 
-    /* editor vertical scrollbars */
-    "editorOverviewRuler.background": "#7f7f7f24",
-    "editorOverviewRuler.border": "#413f4180",
-    "scrollbarSlider.background": "#a87118c8",
+      /* editor vertical scrollbars */
+      "editorOverviewRuler.background": "#7f7f7f24",
+      "editorOverviewRuler.border": "#413f4180",
+      "scrollbarSlider.background": "#a87118c8",
 
-    /* make it super clear when a buffer is unsaved */
-    "tab.activeModifiedBorder": "#ff0000",
-    "tab.inactiveModifiedBorder": "#ff0000"
-  },
-  "gitlens.currentLine.enabled": false,
-  "gitlens.codeLens.scopes": [],
-
-  /* add vertical rulers */
-  "editor.rulers": [
-      {"column":   0, "color": "#5a5a5a20"}, // left boundary 12.5% opaque
-      {"column":   2, "color": "#5a5a5a20"}, // tab stops are 12.5% opaque
-      {"column":   4, "color": "#5a5a5a20"},
-      {"column":   6, "color": "#5a5a5a20"},
-      {"column":   8, "color": "#5a5a5a20"},
-      {"column":  10, "color": "#5a5a5a20"},
-      {"column":  80, "color": "#854e1380"}, // right rule
-      {"column": 120, "color": "#5a5a5a40"}  // extra right rule
-  ],
-
-  "editor.fontSize": 13.5,
-
-  "editor.fontFamily": "Menlo",
-  "editor.lineHeight": 1.34,
-
-  "editor.tabSize": 2,
-  "editor.detectIndentation": false,
-  "editor.linkedEditing": true,
-  "editor.inlineSuggest.enabled": true,
-  "editor.minimap.renderCharacters": false,
-  "editor.minimap.enabled": false,
-
-  "explorer.confirmDragAndDrop": false,
-  "explorer.confirmDelete": false,
-  "explorer.compactFolders": false,
-  "workbench.startupEditor": "none",
-
-  "security.workspace.trust.untrustedFiles": "open",
-
-  /* reduce the gutter width to the left of the line numbers */
-  "editor.glyphMargin": false,
-  "editor.lineDecorationsWidth": 0,
-
-  "terminal.integrated.defaultLocation": "editor",
-  "terminal.integrated.enableFileLinks": false,
-  "terminal.integrated.scrollback": 100000,
-
-  "git.autofetch": true,
-  "git.confirmSync": false,
-
-  /* sort editors (within a group) in the order they were opened */
-  "explorer.openEditors.sortOrder": "editorOrder",
-
-  /* Tailwind+Rails integration */
-  "editor.quickSuggestions": {
-    "strings": true
-  },
-  "files.associations": {
-    "*.css": "tailwindcss",
-    "*.local": "shellscript",
-    "*.erb": "ruby"
-  },
-  "[erb]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": false
-  },
-  "tailwindCSS.includeLanguages": {
-    "javascript": "javascript",
-    "html": "html",
-    "erb": "html"
-  },
-  "tailwindCSS.emmetCompletions": true,
-  "emmet.includeLanguages": {
-    "*.html.erb": "html",
-    "erb": "html"
-  },
-
-  /* FontAwesome integration */
-  "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
-  "fontAwesomeAutocomplete.patterns": [
-    "**/*.html",
-    "**/*.erb",
-  ],
-
-  "workbench.editor.focusRecentEditorAfterClose": false,
-  "workbench.editor.highlightModifiedTabs": true,
-  "workbench.editor.wrapTabs": true,
-  "workbench.editor.showIcons": false,
-  "workbench.editor.splitSizing": "split",
-  "workbench.editor.tabCloseButton": "off",
-  "git.allowForcePush": true,
-  "emmet.useInlineCompletions": true,
-  "editor.acceptSuggestionOnEnter": "off",
-
-  /* git status in file explorer */
-  "explorer.decorations.badges": true,
-  "git.decorations.enabled": true,
-  "telemetry.telemetryLevel": "off",
-
-  /* macros */
-  "macros.list": {
-  },
-  "github.copilot.advanced": {
-    "length": 500
-  },
-  "github.copilot.enable": {
-    "*": true,
-    "plaintext": true,
-    "markdown": true,
-    "scminput": false,
-    "yaml": true
-  },
-
-  /* monospace font in commit message box */
-  "scm.inputFontFamily": "Consolas",
-  "scm.inputFontSize": 12.5,
-  "git.useEditorToCommit": true,
-  "inlineFold.unfoldedOpacity": 1,
-  "inlineFold.unfoldOnLineSelect": true,
-  "search.defaultViewMode": "tree",
-
-  /* jumpy */
-  "jumpy.fontSize": 13,
-  "jumpy.fontFamily": "Menlo",
-
-  /* source control ui */
-  "git.openDiffOnClick": false,
-
-  /* rspec test runner */
-  "rubyTestExplorer.testFramework": "rspec",
-  "railsTestRunner.clearTerminal": true,
-  "editor.scrollbar.verticalScrollbarSize": 8,
-  "editor.scrollbar.horizontalScrollbarSize": 8,
-  "terminal.external.osxExec": "iTerm.app",
-  "terminal.integrated.profiles.osx": {
-    "bash": {
-      "path": "bash",
-      "args": [
-        "-l"
-      ],
-      "icon": "terminal-bash"
+      /* make it super clear when a buffer is unsaved */
+      "tab.activeModifiedBorder": "#ff0000",
+      "tab.inactiveModifiedBorder": "#ff0000"
     },
-    "zsh": {
-      "path": "zsh",
-      "args": [
-        "-l"
-      ]
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.scopes": [],
+
+    /* add vertical rulers */
+    "editor.rulers": [
+        {"column":   0, "color": "#5a5a5a20"}, // left boundary 12.5% opaque
+        {"column":   2, "color": "#5a5a5a20"}, // tab stops are 12.5% opaque
+        {"column":   4, "color": "#5a5a5a20"},
+        {"column":   6, "color": "#5a5a5a20"},
+        {"column":   8, "color": "#5a5a5a20"},
+        {"column":  10, "color": "#5a5a5a20"},
+        {"column":  80, "color": "#854e1380"}, // right rule
+        {"column": 120, "color": "#5a5a5a40"}  // extra right rule
+    ],
+
+    "editor.fontSize": 13.5,
+
+    "editor.fontFamily": "Menlo",
+    "editor.lineHeight": 1.34,
+
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.linkedEditing": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.enabled": false,
+
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "explorer.compactFolders": false,
+    "workbench.startupEditor": "none",
+
+    "security.workspace.trust.untrustedFiles": "open",
+
+    /* reduce the gutter width to the left of the line numbers */
+    "editor.glyphMargin": false,
+    "editor.lineDecorationsWidth": 0,
+
+    "terminal.integrated.defaultLocation": "editor",
+    "terminal.integrated.enableFileLinks": "off",
+    "terminal.integrated.scrollback": 100000,
+
+    "git.autofetch": true,
+    "git.confirmSync": false,
+
+    /* sort editors (within a group) in the order they were opened */
+    "explorer.openEditors.sortOrder": "editorOrder",
+
+    /* Tailwind+Rails integration */
+    "editor.quickSuggestions": {
+      "strings": true
     },
-    "fish": {
-      "path": "fish",
-      "args": [
-        "-l"
-      ]
+    "files.associations": {
+      "*.css": "tailwindcss",
+      "*.local": "shellscript"
     },
-    "tmux": {
-      "path": "tmux",
-      "icon": "terminal-tmux"
+    "[erb]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": false
     },
-    "pwsh": {
-      "path": "pwsh",
-      "icon": "terminal-powershell"
-    }
-  },
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.fontSize": 14,
-  "terminal.integrated.fontFamily": "MesloLGS NF",
-  "workbench.fontAliasing": "auto",
-  "git.suggestSmartCommit": false,
-  "gitlens.views.commitDetails.files.layout": "tree",
-  "githubPullRequests.pullBranch": "never",
-  "files.trimTrailingWhitespace": true,
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "zenMode.hideLineNumbers": false,
-  "railsTestRunner.rspecCommand": "bundle exec rspec",
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.semanticTokenColorCustomizations": {},
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[ruby]": {
-    "editor.defaultFormatter": "misogi.ruby-rubocop"
-  },
-  "editor.accessibilitySupport": "off",
-  "workbench.editor.empty.hint": "hidden",
-  "workbench.editor.tabActionCloseVisibility": false,
-  "scm.showOutgoingChanges": "always",
-  "scm.showIncomingChanges": "always",
-  "multiDiffEditor.experimental.enabled": true,
-  "vscode-gem-lens.enableCodeLens": false,
-  "gitlens.ai.experimental.provider": "openai",
-  "gitlens.ai.experimental.openai.model": "gpt-4-1106-preview",
-  "accessibility.signals.diffLineInserted": {
-    "sound": "off"
-  },
-  "accessibility.signals.diffLineDeleted": {
-    "sound": "off"
-  },
-  "accessibility.signals.diffLineModified": {
-    "sound": "off"
-  },
-  "editor.stickyScroll.enabled": false,
-  "github.copilot.editor.enableAutoCompletions": true,
-  "gitlens.launchpad.ignoredRepositories": [
-    "kerrow/kerrow-web",
-    "rickgorman/js-binary-sim",
-    "rickgorman/trading-engine"
-  ],
-  "rubyLsp.rubyExecutablePath": "/Users/me/.asdf/shims/ruby",
-  "rubyLsp.enabledFeatures": {
-    "codeActions": true,
-    "diagnostics": false,
-    "documentHighlights": true,
-    "documentLink": true,
-    "documentSymbols": true,
-    "foldingRanges": true,
-    "formatting": true,
-    "hover": true,
-    "inlayHint": true,
-    "onTypeFormatting": true,
-    "selectionRanges": true,
-    "semanticHighlighting": true,
-    "completion": true,
-    "codeLens": false,
-    "definition": true,
-    "workspaceSymbol": true,
-    "signatureHelp": true,
-    "typeHierarchy": true
-  },
-  "rubyLsp.featuresConfiguration": {},
-  "rubyLsp.formatter": "rubocop",
-  "rubyLsp.enableExperimentalFeatures": true,
-  "workbench.activityBar.location": "top",
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "tailwindCSS.includeLanguages": {
+      "javascript": "javascript",
+      "html": "html",
+      "erb": "html"
+    },
+    "tailwindCSS.emmetCompletions": true,
+    "emmet.includeLanguages": {
+      "*.html.erb": "html",
+      "erb": "html"
+    },
+
+    "rubyLsp.erbSupport": false,
+
+    /* FontAwesome integration */
+    "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
+    "fontAwesomeAutocomplete.patterns": [
+      "**/*.html",
+      "**/*.erb",
+    ],
+
+    "workbench.editor.focusRecentEditorAfterClose": false,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.editor.wrapTabs": true,
+    "workbench.editor.showIcons": false,
+    "workbench.editor.splitSizing": "split",
+    "workbench.editor.tabCloseButton": "off",
+    "git.allowForcePush": true,
+    "emmet.useInlineCompletions": true,
+    "editor.acceptSuggestionOnEnter": "off",
+
+    /* git status in file explorer */
+    "explorer.decorations.badges": true,
+    "git.decorations.enabled": true,
+    "telemetry.telemetryLevel": "off",
+
+    /* macros */
+    "macros.list": {
+    },
+    "github.copilot.advanced": {
+      "length": 500
+    },
+    "github.copilot.enable": {
+      "*": true,
+      "plaintext": true,
+      "markdown": true,
+      "scminput": false,
+      "yaml": true
+    },
+
+    /* monospace font in commit message box */
+    "scm.inputFontFamily": "Consolas",
+    "scm.inputFontSize": 12.5,
+    "git.useEditorToCommit": true,
+    "inlineFold.unfoldedOpacity": 1,
+    "inlineFold.unfoldOnLineSelect": true,
+    "search.defaultViewMode": "tree",
+
+    /* jumpy */
+    "jumpy.fontSize": 13,
+    "jumpy.fontFamily": "Menlo",
+
+    /* source control ui */
+    "git.openDiffOnClick": false,
+
+    /* rspec test runner */
+    "rubyTestExplorer.testFramework": "rspec",
+    "railsTestRunner.clearTerminal": true,
+    "editor.scrollbar.verticalScrollbarSize": 8,
+    "editor.scrollbar.horizontalScrollbarSize": 8,
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.profiles.osx": {
+      "bash": {
+        "path": "bash",
+        "args": [
+          "-l"
+        ],
+        "icon": "terminal-bash"
+      },
+      "zsh": {
+        "path": "zsh",
+        "args": [
+          "-l"
+        ]
+      },
+      "fish": {
+        "path": "fish",
+        "args": [
+          "-l"
+        ]
+      },
+      "tmux": {
+        "path": "tmux",
+        "icon": "terminal-tmux"
+      },
+      "pwsh": {
+        "path": "pwsh",
+        "icon": "terminal-powershell"
+      }
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+    "workbench.fontAliasing": "auto",
+    "git.suggestSmartCommit": false,
+    "gitlens.views.commitDetails.files.layout": "tree",
+    "githubPullRequests.pullBranch": "never",
+    "files.trimTrailingWhitespace": true,
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "zenMode.hideLineNumbers": false,
+    "railsTestRunner.rspecCommand": "bundle exec rspec",
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.semanticTokenColorCustomizations": {},
+    "[scss]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.accessibilitySupport": "off",
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.editor.tabActionCloseVisibility": false,
+    "scm.showOutgoingChanges": "always",
+    "scm.showIncomingChanges": "always",
+    "multiDiffEditor.experimental.enabled": true,
+    "vscode-gem-lens.enableCodeLens": false,
+    "gitlens.ai.experimental.provider": "openai",
+    "gitlens.ai.experimental.openai.model": "gpt-4-1106-preview",
+    "accessibility.signals.diffLineInserted": {
+      "sound": "off"
+    },
+    "accessibility.signals.diffLineDeleted": {
+      "sound": "off"
+    },
+    "accessibility.signals.diffLineModified": {
+      "sound": "off"
+    },
+    "editor.stickyScroll.enabled": false,
+    "github.copilot.editor.enableAutoCompletions": true,
+    "gitlens.launchpad.ignoredRepositories": [
+      "kerrow/kerrow-web",
+      "rickgorman/js-binary-sim",
+      "rickgorman/trading-engine"
+    ],
+    "rubyLsp.rubyExecutablePath": "/Users/me/.asdf/shims/ruby",
+    "rubyLsp.enabledFeatures": {
+      "codeActions": true,
+      "diagnostics": false,
+      "documentHighlights": true,
+      "documentLink": true,
+      "documentSymbols": true,
+      "foldingRanges": true,
+      "formatting": true,
+      "hover": true,
+      "inlayHint": true,
+      "onTypeFormatting": true,
+      "selectionRanges": true,
+      "semanticHighlighting": true,
+      "completion": true,
+      "codeLens": false,
+      "definition": true,
+      "workspaceSymbol": true,
+      "signatureHelp": true,
+      "typeHierarchy": true
+    },
+    "rubyLsp.featuresConfiguration": {},
+    "rubyLsp.formatter": "rubocop",
+    "rubyLsp.enableExperimentalFeatures": true,
+    "workbench.activityBar.location": "hidden",
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "scm.showHistoryGraph": false
   }
-}
+
