@@ -85,19 +85,16 @@ alias c13="awk '{print \$13}'"
 #  Git                 #
 #################ß######
 alias gad='git add . && git status'
-alias gadot='echo "deprecated -- use gad instead"; git add . && git status'
 alias gcm='git commit -m'
 alias gco='git checkout'
 alias gc-='git checkout -'
-alias gcmmm='commit -m && git push'
 alias gs='git status'
 alias ga='git add'
 alias gd='git diff'
 alias gp='git push'
 alias gds='git diff --staged'
-alias gm='git fetch --all && git checkout master && git reset --hard origin/master && gem install bundler && bundle && yarn install && SKIP_YARN=1 be rails db:drop db:create && SKIP_YARN=1 be rails db:migrate && ENV_RAILS=test SKIP_YARN=1 be rails db:migrate && be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
-alias gpushom='git push origin master'
-alias gpullom='git pull origin master'
+alias gpushom='git push origin ${MASTER_BRANCH_NAME}'
+alias gpullom='git pull origin ${MASTER_BRANCH_NAME}'
 alias gsl='git stash list'
 alias gf='git fetch'
 alias gfa='git fetch --all'
@@ -151,7 +148,6 @@ alias sof='RAILS_ENV=test bin/rspec --only-failures'
 #  Bundle              #
 ########################
 alias be='~/.asdf/shims/bundle exec'
-alias bes='be spring'
 alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
 alias brc='be rails c'
@@ -176,16 +172,6 @@ alias h='heroku run'
 #######################
 # Github              #
 #######################
-
-newpr_old () {
-  local BASE_BRANCH="${MASTER_BRANCH_NAME}"
-
-  if [ -n "$1" ]; then
-    BASE_BRANCH=$1
-  fi
-
-  gh pr create --fill -B "${BASE_BRANCH}" && gh pr ready --undo && gh pr view --web
-}
 
 newpr () {
   local BASE_BRANCH="${MASTER_BRANCH_NAME}"
@@ -216,8 +202,6 @@ alias checks="i18n-tasks health && i18n-tasks normalize && rubocop -a"
 #  Killing / Restarting Things  #
 #################################
 
-alias killpuma="ps -ef | grep puma | grep -v grep | grep -v killpuma | awk '{print $2}' | xargs kill -9"
-alias killspring="ps -ef | grep spring | grep -v grep | grep -v killspring | awk '{print $2}' | xargs kill -9"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 alias k9postgres='brew services stop postgresql@14; k9 postgres; brew services start postgresql@14'
 alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
