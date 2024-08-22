@@ -337,11 +337,7 @@
     "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
   },
   {
-    "key": "f16 u",
-    "command": "extension.jumpy-word"
-  },
-  {
-    "key": "f16 f16 g",
+    "key": "f16 f16 j",
     "command": "extension.jumpy-word"
   },
   {
