@@ -85,14 +85,15 @@ alias c13="awk '{print \$13}'"
 #  Git                 #
 #################ß######
 alias gad='git add . && git status'
+alias gr='git reset HEAD --'
 alias gcm='git commit -m'
 alias gco='git checkout'
 alias gc-='git checkout -'
 alias gs='git status'
 alias ga='git add'
-alias gd='git diff'
+alias gd='git diff --ignore-all-space'
 alias gp='git push'
-alias gds='git diff --staged'
+alias gds='git diff --staged --ignore-all-space'
 alias gpushom='git push origin ${MASTER_BRANCH_NAME}'
 alias gpullom='git pull origin ${MASTER_BRANCH_NAME}'
 alias gsl='git stash list'
