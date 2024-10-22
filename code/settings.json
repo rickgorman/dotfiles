@@ -100,6 +100,11 @@
 
     "rubyLsp.erbSupport": false,
 
+  /* don't autoformat ruby files on save */
+  "[ruby]": {
+    "editor.formatOnSave": false
+  },
+
     /* FontAwesome integration */
     "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
     "fontAwesomeAutocomplete.patterns": [
