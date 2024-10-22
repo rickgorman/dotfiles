@@ -273,3 +273,4 @@
       "text": "Ruby on Rails developer. Test suite is rspec, capybara, and chromedriver. Testing syntax follows the thoughtbot 'let's not' style. Authentication is handled by devise. Tenancy is handled by acts_as_tenant. Database is postgresql. Extensions are: citext, pg_trgm, pgcrypto, plpgsql, vector.  Frontend is server-side rendered, using Turbo, Stimulus, and ViewComponent. The overall design philosophy is to do progressive enhancement, building as little dynamic behavior as is needed to implement a feature."
     }
   ],
+  "editor.occurrencesHighlight": "multiFile"
