@@ -33,6 +33,7 @@ alias .='pwd'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias back='cd -'
+alias up='cd ..'
 
 alias sl="ls"
 alias ls="ls -G"
@@ -43,6 +44,10 @@ alias ll='ls -laAF'
 # print all path entries, one per line
 alias path='echo -e ${PATH//:/\\n}'
 
+# specific directory shortcuts
+alias home='cd ~'
+alias dotfiles='cd ~/dotfiles'
+alias work='cd ~/work'
 alias web='cd ~/work/web'
 alias extension='cd ~/work/extension'
 
