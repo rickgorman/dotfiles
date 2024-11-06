@@ -86,6 +86,11 @@ alias c11="awk '{print \$11}'"
 alias c12="awk '{print \$12}'"
 alias c13="awk '{print \$13}'"
 
+# clipboard interaction
+alias c="pbcopy"
+alias p="pbpaste"
+
+
 ########################
 #  Git                 #
 #################ß######
