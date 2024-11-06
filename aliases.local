@@ -90,6 +90,13 @@ alias c13="awk '{print \$13}'"
 alias c="pbcopy"
 alias p="pbpaste"
 
+########################
+#  Better tools        #
+########################
+
+man() {
+  env MANPAGER="sh -c 'col -bx | bat -l man -p'" /usr/bin/man "$@"
+}
 
 ########################
 #  Git                 #
