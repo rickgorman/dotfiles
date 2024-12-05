@@ -26,6 +26,8 @@
   lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 
   cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|integration' | xargs -n 1 git branch -d"
+[branch]
+	autoSetupMerge = always
 [color]
 	diff = auto
 	status = auto
@@ -36,15 +38,15 @@
 [core]
 	excludesfile = ~/.gitignore
 	editor = code --wait
-[push]
-	default = current
-[user]
-	name = Rick Gorman
-	email = rickgorman@users.noreply.github.com
+[diff]
+  external = difft
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[branch]
-	autoSetupMerge = always
+[push]
+	default = current
+[user]
+	name = Rick Gorman
+	email = rickgorman@users.noreply.github.com
