@@ -258,6 +258,7 @@ alias checks="i18n-tasks health && i18n-tasks normalize && rubocop -a"
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 alias k9postgres='brew services stop postgresql@14; k9 postgres; brew services start postgresql@14'
 alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
+alias rrrr='k9puma; k9postgres; bundle exec rails db:drop db:create db:migrate dev:prime'
 
 docker_restart() {
   echo "Fetching running container IDs..."
