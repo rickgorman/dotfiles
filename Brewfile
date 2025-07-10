@@ -25,6 +25,9 @@ brew "node"                # Node.js runtime
 brew "postgresql@17"       # PostgreSQL 17 for local dev DB
 brew "redis"               # In-memory key-value store
 
+# --- EDITORS ---
+cask "visual-studio-code"
+
 # --- DEVELOPMENT TOOLS ---
 brew "awscli"              # AWS CLI v2
 brew "ctags"               # Generate tags for code navigation
