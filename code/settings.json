@@ -1,103 +1,103 @@
 {
-    "workbench.tree.indent": 15,
-    "workbench.colorCustomizations": {
-      "tree.indentGuidesStroke": "#4f5959",
-      "editorRuler.foreground": "#ffffff0f",
-      "editorError.foreground": "#b3b3ffcf",
-      "editorWarning.foreground": "#ffc40090",
-      "editorInfo.foreground": "#35ffab90",
-      "tab.unfocusedActiveBorder": "#000000",
-      "tab.unfocusedActiveBorderTop": "#000000",
-      "tab.activeBackground": "#009dffb7",
-      "tab.unfocusedActiveBackground": "#fbfbfb26",
-      "gitDecoration.modifiedResourceForeground": "#ffe080",
-      "statusBar.foreground": "#ffffff",
+  "workbench.tree.indent": 15,
+  "workbench.colorCustomizations": {
+    "tree.indentGuidesStroke": "#4f5959",
+    "editorRuler.foreground": "#ffffff0f",
+    "editorError.foreground": "#b3b3ffcf",
+    "editorWarning.foreground": "#ffc40090",
+    "editorInfo.foreground": "#35ffab90",
+    "tab.unfocusedActiveBorder": "#000000",
+    "tab.unfocusedActiveBorderTop": "#000000",
+    "tab.activeBackground": "#009dffb7",
+    "tab.unfocusedActiveBackground": "#fbfbfb26",
+    "gitDecoration.modifiedResourceForeground": "#ffe080",
+    "statusBar.foreground": "#ffffff",
 
-      /* copilot */
-      // "editorGhostText.border": "#33ff003f",
-      "editorGhostText.foreground": "#33ff0032",
+    /* copilot */
+    // "editorGhostText.border": "#33ff003f",
+    "editorGhostText.foreground": "#33ff0032",
 
-      /* editor vertical scrollbars */
-      "editorOverviewRuler.background": "#7f7f7f24",
-      "editorOverviewRuler.border": "#413f4180",
-      "scrollbarSlider.background": "#a87118c8",
+    /* editor vertical scrollbars */
+    "editorOverviewRuler.background": "#7f7f7f24",
+    "editorOverviewRuler.border": "#413f4180",
+    "scrollbarSlider.background": "#a87118c8",
 
-      /* make it super clear when a buffer is unsaved */
-      "tab.activeModifiedBorder": "#ff0000",
-      "tab.inactiveModifiedBorder": "#ff0000"
-    },
-    "gitlens.currentLine.enabled": false,
-    "gitlens.codeLens.scopes": [],
+    /* make it super clear when a buffer is unsaved */
+    "tab.activeModifiedBorder": "#ff0000",
+    "tab.inactiveModifiedBorder": "#ff0000"
+  },
+  "gitlens.currentLine.enabled": false,
+  "gitlens.codeLens.scopes": [],
 
-    /* add vertical rulers */
-    "editor.rulers": [
-        {"column":   0, "color": "#5a5a5a20"}, // left boundary 12.5% opaque
-        {"column":   2, "color": "#5a5a5a20"}, // tab stops are 12.5% opaque
-        {"column":   4, "color": "#5a5a5a20"},
-        {"column":   6, "color": "#5a5a5a20"},
-        {"column":   8, "color": "#5a5a5a20"},
-        {"column":  10, "color": "#5a5a5a20"},
-        {"column":  80, "color": "#854e1380"}, // right rule
-        {"column": 120, "color": "#5a5a5a40"}  // extra right rule
-    ],
+  /* add vertical rulers */
+  "editor.rulers": [
+      {"column":   0, "color": "#5a5a5a20"}, // left boundary 12.5% opaque
+      {"column":   2, "color": "#5a5a5a20"}, // tab stops are 12.5% opaque
+      {"column":   4, "color": "#5a5a5a20"},
+      {"column":   6, "color": "#5a5a5a20"},
+      {"column":   8, "color": "#5a5a5a20"},
+      {"column":  10, "color": "#5a5a5a20"},
+      {"column":  80, "color": "#854e1380"}, // right rule
+      {"column": 120, "color": "#5a5a5a40"}  // extra right rule
+  ],
 
-    "editor.fontSize": 13.5,
+  "editor.fontSize": 13.5,
 
-    "editor.fontFamily": "Menlo",
-    "editor.lineHeight": 1.34,
+  "editor.fontFamily": "Menlo",
+  "editor.lineHeight": 1.34,
 
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false,
-    "editor.linkedEditing": true,
-    "editor.inlineSuggest.enabled": true,
-    "editor.minimap.renderCharacters": false,
-    "editor.minimap.enabled": false,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.linkedEditing": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.minimap.enabled": false,
 
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "explorer.compactFolders": false,
-    "workbench.startupEditor": "none",
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "explorer.compactFolders": false,
+  "workbench.startupEditor": "none",
 
-    "security.workspace.trust.untrustedFiles": "open",
+  "security.workspace.trust.untrustedFiles": "open",
 
-    /* reduce the gutter width to the left of the line numbers */
-    "editor.glyphMargin": false,
-    "editor.lineDecorationsWidth": 0,
+  /* reduce the gutter width to the left of the line numbers */
+  "editor.glyphMargin": false,
+  "editor.lineDecorationsWidth": 0,
 
-    "terminal.integrated.defaultLocation": "editor",
-    "terminal.integrated.enableFileLinks": "off",
-    "terminal.integrated.scrollback": 100000,
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.enableFileLinks": "off",
+  "terminal.integrated.scrollback": 100000,
 
-    "git.autofetch": true,
-    "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.confirmSync": false,
 
-    /* sort editors (within a group) in the order they were opened */
-    "explorer.openEditors.sortOrder": "editorOrder",
+  /* sort editors (within a group) in the order they were opened */
+  "explorer.openEditors.sortOrder": "editorOrder",
 
-    /* Tailwind+Rails integration */
-    "editor.quickSuggestions": {
-      "strings": true
-    },
-    "files.associations": {
-      "*.css": "tailwindcss",
-      "*.local": "shellscript"
-    },
-    "[erb]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": false
-    },
-    "tailwindCSS.includeLanguages": {
-      "javascript": "javascript",
-      "html": "html",
-      "erb": "html"
-    },
-    "tailwindCSS.emmetCompletions": true,
-    "emmet.includeLanguages": {
-      "*.html.erb": "html",
-      "erb": "html"
-    },
+  /* Tailwind+Rails integration */
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.local": "shellscript"
+  },
+  "[erb]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "html": "html",
+    "erb": "html"
+  },
+  "tailwindCSS.emmetCompletions": true,
+  "emmet.includeLanguages": {
+    "*.html.erb": "html",
+    "erb": "html"
+  },
 
-    "rubyLsp.erbSupport": false,
+  "rubyLsp.erbSupport": false,
 
   /* don't autoformat ruby files on save */
   "[ruby]": {
@@ -105,23 +105,25 @@
   },
 
     /* FontAwesome integration */
-    "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
+  "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
   "fontAwesomeAutocomplete.patterns": ["**/*.html", "**/*.erb"],
 
-    "workbench.editor.focusRecentEditorAfterClose": false,
-    "workbench.editor.highlightModifiedTabs": true,
-    "workbench.editor.wrapTabs": true,
-    "workbench.editor.showIcons": false,
-    "workbench.editor.splitSizing": "split",
-    "workbench.editor.tabCloseButton": "off",
-    "git.allowForcePush": true,
-    "emmet.useInlineCompletions": true,
-    "editor.acceptSuggestionOnEnter": "off",
+  "workbench.editor.focusRecentEditorAfterClose": false,
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.wrapTabs": true,
+  "workbench.editor.showIcons": false,
+  "workbench.editor.splitSizing": "split",
+  "workbench.editor.tabCloseButton": "off",
+  "git.allowForcePush": true,
+  "emmet.useInlineCompletions": true,
+  "editor.acceptSuggestionOnEnter": "off",
 
-    /* git status in file explorer */
-    "explorer.decorations.badges": true,
-    "git.decorations.enabled": true,
-    "telemetry.telemetryLevel": "off",
+  /* git status in file explorer */
+  "explorer.decorations.badges": true,
+  "git.decorations.enabled": true,
+
+  /* disable telemetry */
+  "telemetry.telemetryLevel": "off",
 
     /* macros */
   "macros.list": {},
@@ -257,11 +259,30 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
   "scm.showHistoryGraph": false,
-  "github.copilot.chat.experimental.codeGeneration.instructions": [
+  "markdown.extension.toc.updateOnSave": false,
+  "editor.occurrencesHighlight": "multiFile",
+  "yaml.schemas": {
+    "file:///Users/rickgorman/.vscode/extensions/atlassian.atlascode-3.8.6/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
+  },
+  "atlascode.jira.enabled": true,
+  "github.copilot.chat.codeGeneration.instructions": [
     {
       "text": "Ruby on Rails developer. Test suite is rspec, capybara, and chromedriver. Testing syntax follows the thoughtbot 'let's not' style. Authentication is handled by devise. Tenancy is handled by acts_as_tenant. Database is postgresql. Extensions are: citext, pg_trgm, pgcrypto, plpgsql, vector.  Frontend is server-side rendered, using Turbo, Stimulus, and ViewComponent. The overall design philosophy is to do progressive enhancement, building as little dynamic behavior as is needed to implement a feature."
     }
   ],
-  "markdown.extension.toc.updateOnSave": false,
-  "editor.occurrencesHighlight": "multiFile"
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "auto",
+    "asdfExecutablePath": "/Users/me/.asdf/shims/asdf",
+  },
+  "coverage-gutters.coverageFileNames": [
+    "coverage.json",
+    "coverage/coverage.json",
+    "lcov.info",
+    "cov.xml",
+    "coverage.xml",
+    "cobertura.xml",
+    "jacoco.xml",
+    "coverage.cobertura.xml"
+  ],
+  "diffEditor.ignoreTrimWhitespace": false
 }

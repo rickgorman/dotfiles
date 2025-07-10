@@ -454,5 +454,23 @@
   {
     "key": "f16 shift+c",
     "command": "workbench.panel.chat.view.copilot.focus"
+  },
+  {
+    "key": "f16 i",
+    "command": "editor.action.inlineDiffs.acceptAllAcrossAllEditors",
+    "when": "editorHasPromptBar && editorTextFocus || editorTextFocus && hasDisplayedDiff"
+  },
+  {
+    "key": "cmd+pausebreak",
+    "command": "-editor.action.inlineDiffs.acceptAllAcrossAllEditors",
+    "when": "editorHasPromptBar && editorTextFocus || editorTextFocus && hasDisplayedDiff"
+  },
+  {
+    "key": "f16 s",
+    "command": "editor.action.sortLinesAscending"
+  },
+  {
+    "key": "f16 shift+s",
+    "command": "editor.action.sortLinesDescending"
   }
 ]
