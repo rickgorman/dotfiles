@@ -11,7 +11,7 @@ alias bbd="brew bundle dump --force"
 ########################
 #  Alias Controls      #
 ########################
-alias ba='$VISUAL ~/dotfiles-local/aliases.local --wait && source ~/dotfiles-local/aliases.local && rcup'
+alias ba='$EDITOR ~/dotfiles-local/aliases.local && source ~/dotfiles-local/aliases.local && rcup'
 alias src='source ~/dotfiles-local/aliases.local'
 
 ########################
@@ -19,12 +19,16 @@ alias src='source ~/dotfiles-local/aliases.local'
 ########################
 alias weather="curl wttr.in/?uF"
 alias wtr="weather"
+alias weatherc="curl -s 'wttr.in/?format=3' | pbcopy && echo 'Weather copied to clipboard!' && pbpaste"
 alias cheat="curl cht.sh"
 
 # lock the screen
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 alias yuri="Say -v Yuri"
+
+# fix an issue where the /usr/local/bin/code script failes when run with zsh
+alias code='/bin/bash /usr/local/bin/code'
 
 ########################
 #  Navigation          #
@@ -99,6 +103,12 @@ man() {
 }
 
 ########################
+#  Claude              #
+########################
+
+alias cc="claude"
+
+########################
 #  Git                 #
 #################ß######
 alias gad='git add . && git status'
@@ -110,10 +120,12 @@ alias gs='git status'
 alias ga='git add'
 alias gd='git diff --ignore-all-space'
 alias gp='git push'
+alias gpo='git push -u origin $(git branch --show-current)'
 alias gds='git diff --staged --ignore-all-space'
 alias gpushom='git push origin ${MASTER_BRANCH_NAME}'
 alias gpullom='git pull origin ${MASTER_BRANCH_NAME}'
 alias gsl='git stash list'
+alias stash='git stash --include-untracked'
 alias gf='git fetch'
 alias gfa='git fetch --all'
 alias nb='git checkout -b'
@@ -127,10 +139,15 @@ alias grs='git rebase --skip'
 alias gbg='git bisect good'
 alias gbb='git bisect bad'
 alias grim='git rebase -i ${MASTER_BRANCH_NAME}'
+alias grid='git rebase -i develop'
 alias main='git checkout main && g pull'
+alias gpfl='git push --force-with-lease'
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
+
+# reset vcr_cassettes and remove untracked ones
+alias clean_vcr='git restore spec/vcr_cassettes; git clean -fd spec/vcr_cassettes'
 
 # prune stale local branches in a rather destructive way
 gpruneomg () {
@@ -153,6 +170,8 @@ gpruneomg () {
 
   cat /tmp/branches_to_prune.txt | grep -v "#" | xargs -L 1 git
 }
+
+alias develop='git checkout develop'
 
 ########################
 # Ruby                 #
@@ -193,9 +212,31 @@ update_ruby_version() {
 # Rails                #
 ########################
 alias rails='rails'
-alias sp='RAILS_ENV=test rails parallel:spec'
-alias sr='RECORD_RUNTIME=true RAILS_ENV=test rails parallel:spec'
-alias sof='RAILS_ENV=test bin/rspec --only-failures'
+alias sp='RAILS_ENV=test bundle exec rails parallel:spec'
+sp2() {
+  local output_file=$(mktemp)
+
+  # Use script to preserve colors while capturing output
+  script -q "$output_file" bash -c "RAILS_ENV=test bundle exec rails parallel:spec"
+
+  # Extract failure sections after the run completes
+  local failures=$(grep -A 50 "Failed examples:" "$output_file" | grep -E "(rspec|# )" | head -20)
+
+  # If there are failures, display them at the end
+  if [ -n "$failures" ]; then
+    echo -e "\n\033[1;31m═══════════════════════════════════════════════════════════════════════════════\033[0m"
+    echo -e "\033[1;31m                            AGGREGATED FAILURES                               \033[0m"
+    echo -e "\033[1;31m═══════════════════════════════════════════════════════════════════════════════\033[0m\n"
+    echo "$failures"
+    echo -e "\n\033[1;31m═══════════════════════════════════════════════════════════════════════════════\033[0m"
+  fi
+
+  # Clean up
+  rm "$output_file"
+}
+alias sr='RECORD_RUNTIME=true RAILS_ENV=test bundle exec rails parallel:spec'
+alias sof='RAILS_ENV=test bundle exec rspec --only-failures'
+alias spof='sp; sof'
 
 ########################
 #  Bundle              #
@@ -231,6 +272,15 @@ newpr () {
 
   if [ -n "$1" ]; then
     BASE_BRANCH=$1
+  else
+    # Check if current branch has a different upstream branch
+    local git_status_output=$(git status 2>/dev/null)
+    local upstream_match=$(echo "$git_status_output" | grep -o "Your branch is ahead of '[^']*'" | sed "s/Your branch is ahead of '\([^']*\)'.*/\1/")
+
+    if [ -n "$upstream_match" ]; then
+      BASE_BRANCH="$upstream_match"
+      echo "Detected upstream branch: $BASE_BRANCH"
+    fi
   fi
 
   # Create a temporary file to hold the commit log in Markdown format.
@@ -246,19 +296,57 @@ newpr () {
   rm "${TEMP_FILE}"
 }
 
+squash_merge() {
+  local BASE_BRANCH="${MASTER_BRANCH_NAME:-main}"
+
+  # Auto-detect upstream branch if not provided
+  if [ -n "$1" ]; then
+    BASE_BRANCH=$1
+  else
+    # Try to detect from git status
+    local upstream_match=$(git status 2>/dev/null | grep -o "Your branch is ahead of '[^']*'" | sed "s/Your branch is ahead of
+'\([^']*\)'.*/\1/")
+    if [ -n "$upstream_match" ]; then
+      BASE_BRANCH=$(echo "$upstream_match" | sed "s|origin/||")
+    elif git rev-parse --verify develop >/dev/null 2>&1; then
+      BASE_BRANCH="develop"
+    elif git rev-parse --verify main >/dev/null 2>&1; then
+      BASE_BRANCH="main"
+    elif git rev-parse --verify master >/dev/null 2>&1; then
+      BASE_BRANCH="master"
+    fi
+  fi
+
+  echo "Using base branch: $BASE_BRANCH"
+
+  # Capture commit messages with full body BEFORE reset
+  local TEMP_FILE=$(mktemp)
+  git log --reverse --format='- %s%n%b' $(git merge-base HEAD "$BASE_BRANCH")..HEAD | sed '/^$/d' > "$TEMP_FILE"
+
+  # Reset and commit with editor
+  git reset --soft $(git merge-base HEAD "$BASE_BRANCH") && \
+  git commit -eF "$TEMP_FILE" && \
+  git rebase "$BASE_BRANCH"
+
+  # Clean up
+  rm "$TEMP_FILE"
+}
+
+alias pr="gh pr view --web"
 alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
 alias ready="gh pr ready && gh pr edit --add-reviewer FlorenceHC/hedgehog"
 alias rdy="ready"
 alias checks="i18n-tasks health && i18n-tasks normalize && rubocop -a"
 
 #################################
-#  Killing / Restarting Things  #
+#  Process Management
 #################################
 
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
-alias k9postgres='brew services stop postgresql@14; k9 postgres; brew services start postgresql@14'
+alias k9postgres='brew services stop postgresql@17; k9 postgres; brew services start postgresql@17'
 alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 alias rrrr='k9puma; k9postgres; bundle exec rails db:drop db:create db:migrate dev:prime'
+alias plist='ps -ef | grep -v grep | grep'
 
 docker_restart() {
   echo "Fetching running container IDs..."
@@ -301,6 +389,7 @@ docker_restart() {
 }
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
+
 
 ######################
 # Depoliticize tools #
