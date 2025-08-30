@@ -1,5 +1,7 @@
 echo "*** now executing .zshrc.local"
 
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -56,6 +58,9 @@ export EDITOR="vim"
 
 # and vscode the default visual editor (thanks mburns)
 export VISUAL="code"
+
+# and vim the editor for git changes
+export GIT_EDITOR="vim"
 
 # nvm path stuff
 export NVM_DIR="$HOME/.nvm"
@@ -137,7 +142,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
+
+# Enable extended history with timestamps
+setopt EXTENDED_HISTORY
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -269,3 +277,7 @@ fzf-history-frecency-widget() {
 # Rebind CTRL+R to the custom fzf-history-frecency-widget
 zle -N fzf-history-frecency-widget
 bindkey '^R' fzf-history-frecency-widget
+
+# zoxide
+eval "$(zoxide init zsh)"
+
