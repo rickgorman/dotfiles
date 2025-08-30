@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo $EDITOR)",
+      "Bash(echo $VISUAL)",
+      "Bash(git config:*)",
+      "Read(/Users/me/dotfiles/**)",
+      "Read(/Users/me/dotfiles-local/**)"
+    ],
+    "deny": []
+  }
+}
