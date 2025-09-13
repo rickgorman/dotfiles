@@ -160,27 +160,8 @@ alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/struc
 # reset vcr_cassettes and remove untracked ones
 alias clean_vcr='git restore spec/vcr_cassettes; git clean -fd spec/vcr_cassettes'
 
-# prune stale local branches in a rather destructive way
-gpruneomg () {
-  git fetch -p
-
-  echo "# WARNING: CLOSING THIS EDITOR WILL FORCEFULLY REMOVE THESE LOCAL BRANCHES" >  /tmp/branches_to_prune.txt
-  echo "#"                                                                          >> /tmp/branches_to_prune.txt
-  echo "# Please be sure to remove entries that you do not wish to prune. "         >> /tmp/branches_to_prune.txt
-  echo "# Recovery will be full of pain and regret."                                >> /tmp/branches_to_prune.txt
-  echo "\n"                                                                         >> /tmp/branches_to_prune.txt
-
-  branches=`git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == "[gone]" {sub("refs/heads/", "", $1); print $1}'`
-
-  echo $branches | while read -r branch
-  do
-    echo "branch -D $branch" >> /tmp/branches_to_prune.txt
-  done
-
-  $VISUAL /tmp/branches_to_prune.txt --wait
-
-  cat /tmp/branches_to_prune.txt | grep -v "#" | xargs -L 1 git
-}
+# Git branch pruning
+source ~/dotfiles-local/functions/gpruneomg.sh
 
 alias develop='git checkout develop'
 
@@ -278,70 +259,14 @@ alias h='heroku run'
 # Github              #
 #######################
 
-newpr () {
-  local BASE_BRANCH="${MASTER_BRANCH_NAME}"
+# PR creation
+source ~/dotfiles-local/functions/newpr.sh
 
-  if [ -n "$1" ]; then
-    BASE_BRANCH=$1
-  else
-    # Check if current branch has a different upstream branch
-    local git_status_output=$(git status 2>/dev/null)
-    local upstream_match=$(echo "$git_status_output" | grep -o "Your branch is ahead of '[^']*'" | sed "s/Your branch is ahead of '\([^']*\)'.*/\1/")
+# Squash merge helper
+source ~/dotfiles-local/functions/squash_merge.sh
 
-    if [ -n "$upstream_match" ]; then
-      BASE_BRANCH="$upstream_match"
-      echo "Detected upstream branch: $BASE_BRANCH"
-    fi
-  fi
-
-  # Create a temporary file to hold the commit log in Markdown format.
-  local TEMP_FILE=$(mktemp)
-
-  # Capture commit logs into the temporary file with Markdown formatting.
-  git log "${BASE_BRANCH}..HEAD" --pretty=format:"%s%n---%n%b%n%n" > "${TEMP_FILE}"
-
-  # Create the PR using the temporary file as the body, formatted in Markdown.
-  gh pr create --fill -B "${BASE_BRANCH}" --body-file "${TEMP_FILE}" && gh pr ready --undo && gh pr view --web
-
-  # Clean up the temporary file.
-  rm "${TEMP_FILE}"
-}
-
-squash_merge() {
-  local BASE_BRANCH="${MASTER_BRANCH_NAME:-main}"
-
-  # Auto-detect upstream branch if not provided
-  if [ -n "$1" ]; then
-    BASE_BRANCH=$1
-  else
-    # Try to detect from git status
-    local upstream_match=$(git status 2>/dev/null | grep -o "Your branch is ahead of '[^']*'" | sed "s/Your branch is ahead of
-'\([^']*\)'.*/\1/")
-    if [ -n "$upstream_match" ]; then
-      BASE_BRANCH=$(echo "$upstream_match" | sed "s|origin/||")
-    elif git rev-parse --verify develop >/dev/null 2>&1; then
-      BASE_BRANCH="develop"
-    elif git rev-parse --verify main >/dev/null 2>&1; then
-      BASE_BRANCH="main"
-    elif git rev-parse --verify master >/dev/null 2>&1; then
-      BASE_BRANCH="master"
-    fi
-  fi
-
-  echo "Using base branch: $BASE_BRANCH"
-
-  # Capture commit messages with full body BEFORE reset
-  local TEMP_FILE=$(mktemp)
-  git log --reverse --format='- %s%n%b' $(git merge-base HEAD "$BASE_BRANCH")..HEAD | sed '/^$/d' > "$TEMP_FILE"
-
-  # Reset and commit with editor
-  git reset --soft $(git merge-base HEAD "$BASE_BRANCH") && \
-  git commit -eF "$TEMP_FILE" && \
-  git rebase "$BASE_BRANCH"
-
-  # Clean up
-  rm "$TEMP_FILE"
-}
+# PR description autofiller
+source ~/dotfiles-local/functions/pr-autofill-description.sh
 
 alias pr="gh pr view --web"
 alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
@@ -359,45 +284,8 @@ alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 alias rrrr='k9puma; k9postgres; bundle exec rails db:drop db:create db:migrate dev:prime'
 alias plist='ps -ef | grep -v grep | grep'
 
-docker_restart() {
-  echo "Fetching running container IDs..."
-  # Get an array of running container IDs
-  ids=($(docker ps -q))
-
-  if [ ${#ids[@]} -gt 0 ]; then
-    echo "Found running containers: ${ids[*]}"
-    # Iterate over each container ID and handle in parallel
-    for id in "${ids[@]}"; do
-      {
-        echo "Stopping container $id..."
-        docker stop "$id"
-        if [ $? -eq 0 ]; then
-          echo "Container $id stopped successfully."
-        else
-          echo "Failed to stop container $id."
-          continue
-        fi
-
-        # Adding a short delay to ensure the container stops properly
-        sleep 2
-
-        echo "Starting container $id..."
-        docker start "$id"
-        if [ $? -eq 0 ]; then
-          echo "Container $id started successfully."
-        else
-          echo "Failed to start container $id."
-        fi
-      } & # Run each block in the background
-    done
-
-    # Wait for all background jobs to finish
-    wait
-    echo "All containers have been restarted."
-  else
-    echo "No running containers to restart."
-  fi
-}
+# Docker restart helper
+source ~/dotfiles-local/functions/docker_restart.sh
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 
@@ -414,31 +302,5 @@ i18n() {
 # Video editing #
 #################
 
-ffmpeg_two_pass() {
-  local input_file="$1"
-  local base_name="${input_file%.*}"
-  local temp_output="${base_name}_temp.mp4"
-  local final_output="${base_name}_pass_2.mp4"
-  local temp_files=("ffmpeg2pass-0.log" "ffmpeg2pass-0.log.mbtree")
-
-  # First pass
-  ffmpeg -i "$input_file" -pass 1 -r 15 -c:v h264 -c:a aac -b:v 200k -strict normal "$temp_output"
-
-  # Second pass
-  ffmpeg -i "$temp_output" -pass 2 -r 15 -c:v h264 -c:a aac -b:v 100k -strict normal "$final_output"
-
-  # Clean up temporary files
-  rm "$temp_output"
-  for temp_file in "${temp_files[@]}"; do
-    [ -f "$temp_file" ] && rm "$temp_file"
-  done
-
-  echo "Processing complete. Output file: $final_output"
-}
-
-#################
-# PR Tools      #
-#################
-
-# Source PR autofill function
-source ~/dotfiles-local/functions/pr-autofill-description.sh
+# FFmpeg two-pass encoding
+source ~/dotfiles-local/functions/ffmpeg_two_pass.sh
