@@ -280,7 +280,7 @@
     "when": "config.github.copilot.inlineSuggest.enable && editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
   },
   {
-    "key": "f16 g",
+    "key": "f16 g g",
     "command": "workbench.action.toggleAuxiliaryBar"
   },
   {
@@ -472,5 +472,15 @@
   {
     "key": "f16 shift+s",
     "command": "editor.action.sortLinesDescending"
+  },
+  {
+    "key": "f16 g r",
+    "command": "git.revertSelectedRanges",
+    "when": "editorTextFocus && !operationInProgress && resourceScheme == 'file'"
+  },
+  {
+    "key": "cmd+k cmd+r",
+    "command": "-git.revertSelectedRanges",
+    "when": "editorTextFocus && !operationInProgress && resourceScheme == 'file'"
   }
 ]
