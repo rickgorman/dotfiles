@@ -90,6 +90,17 @@ alias c11="awk '{print \$11}'"
 alias c12="awk '{print \$12}'"
 alias c13="awk '{print \$13}'"
 
+# Row extraction functions
+alias r1="sed -n '1p'"
+alias r2="sed -n '2p'"
+alias r3="sed -n '3p'"
+alias r4="sed -n '4p'"
+alias r5="sed -n '5p'"
+alias r6="sed -n '6p'"
+alias r7="sed -n '7p'"
+alias r8="sed -n '8p'"
+alias r9="sed -n '9p'"
+
 # clipboard interaction
 alias c="pbcopy"
 alias p="pbpaste"
@@ -211,7 +222,7 @@ update_ruby_version() {
 ########################
 # Rails                #
 ########################
-alias rails='rails'
+alias r='bundle exec rails'
 alias sp='RAILS_ENV=test bundle exec rails parallel:spec'
 sp2() {
   local output_file=$(mktemp)
@@ -424,3 +435,10 @@ ffmpeg_two_pass() {
 
   echo "Processing complete. Output file: $final_output"
 }
+
+#################
+# PR Tools      #
+#################
+
+# Source PR autofill function
+source ~/dotfiles-local/functions/pr-autofill-description.sh
