@@ -2,7 +2,7 @@
 // Save and close to update the PR description
 // Close without saving to cancel
 
-# Summary
+## Summary
 
 Link to [JIRA ticket](https://example.com) if available. Otherwise dont show this section
 
