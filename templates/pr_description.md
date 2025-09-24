@@ -4,7 +4,7 @@
 
 ## Summary
 
-Link to [JIRA ticket](https://example.com) if available. Otherwise dont show this section
+[JIRA ticket id](https://example.com) <!-- if available. Otherwise dont show this section ->
 
 This PR does [1-10] things, [x, y, z, ...]. [Explain why with a quick reason - product need, bug fix, cleanup, whatever - keep it short and sweet]. If only 1 thing, don't show the number, just explain the thing it does. If complicated, feel free to add a second paragraph.
 
@@ -18,13 +18,12 @@ This PR does [1-10] things, [x, y, z, ...]. [Explain why with a quick reason - p
 
 ## Commit History
 
-- [Commit 1 title]
-------
+### [Commit 1 title]
 
 [Description of changes made]
 
+---
 
-- [Commit 2 title]
-------
+### [Commit 2 title]
 
 [Description of changes made]
