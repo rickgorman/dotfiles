@@ -65,7 +65,7 @@
   "[ruby]": {
     "editor.formatOnSave": false
   },
-  "ruby.rubocop.onSave": false,
+  "ruby.rubocop.onSave": true,
 
   /* FontAwesome integration */
   "fontAwesomeAutocomplete.enableElevatedSortPriority": true,
