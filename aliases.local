@@ -253,7 +253,8 @@ alias brr='be rails routes | fzf'
 ########################
 #CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 #alias gph='git push heroku $CURRENT_BRANCH:master'
-alias h='heroku run'
+alias h='heroku'
+alias hr='heroku run'
 
 #######################
 # Github              #
