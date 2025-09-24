@@ -482,5 +482,9 @@
     "key": "cmd+k cmd+r",
     "command": "-git.revertSelectedRanges",
     "when": "editorTextFocus && !operationInProgress && resourceScheme == 'file'"
+  },
+  {
+    "key": "f16 i",
+    "command": "inlineFold.toggle"
   }
 ]
