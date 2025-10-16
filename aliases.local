@@ -68,6 +68,10 @@ alias map="xargs -n1"
 # ex:  echo "1 2 3" | sum => 6
 alias sum="jq -s 'add'"
 
+# Flatten function - converts multiple lines to a single line
+# ex:  echo -e "asdf\njkl\nbbb" | flatten => asdf jkl bbb
+alias flatten="xargs"
+
 # Slice function - extracts columns from output
 # ex:  ls -l | slice 5 9  => 9577 awesomefile.txt
 slice() {
@@ -308,3 +312,6 @@ i18n() {
 
 # FFmpeg two-pass encoding
 source ~/dotfiles-local/functions/ffmpeg_two_pass.sh
+
+# Movie file processor
+source ~/dotfiles-local/functions/movie.sh
