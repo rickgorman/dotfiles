@@ -9,6 +9,86 @@ pr-autofill-description() {
   local current_branch merge_target temp_file pr_number claude_pid diff_content word_count
   local interrupted=false
 
+  # Maximum word count for diff (to avoid token limit issues)
+  local max_word_count=30000
+
+  # Paths to ignore when generating diff (reduce noise and token usage)
+  local -a ignored_paths=(
+    'spec/vcr_cassettes/'
+  )
+
+  # Build git diff exclusion arguments
+  build_diff_exclusions() {
+    local exclusions=()
+    for path in "${ignored_paths[@]}"; do
+      exclusions+=(":(exclude)$path")
+    done
+    echo "${exclusions[@]}"
+  }
+
+  # Analyze diff and show word count by extension and directory
+  analyze_diff_size() {
+    local exclusions=($(build_diff_exclusions))
+
+    echo ""
+    echo "❌ Diff is too large ($word_count words, limit is $max_word_count)"
+    echo ""
+    echo "To reduce the diff size, consider excluding some paths."
+    echo "Here's a breakdown to help you decide what to exclude:"
+    echo ""
+
+    # Get numstat for word counts per file
+    local stats=$(git diff --numstat "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null)
+
+    # Analyze by file extension
+    echo "📊 Top file extensions by word count:"
+    echo "$stats" | awk '{
+      # Extract extension from filename
+      filename = $3
+      split(filename, parts, ".")
+      if (length(parts) > 1) {
+        ext = parts[length(parts)]
+      } else {
+        ext = "(no extension)"
+      }
+      # Sum additions and deletions
+      words = $1 + $2
+      ext_count[ext] += words
+    }
+    END {
+      for (ext in ext_count) {
+        printf "%10d  %s\n", ext_count[ext], ext
+      }
+    }' | sort -rn | head -10
+
+    echo ""
+    echo "📁 Top directories by word count:"
+    echo "$stats" | awk '{
+      # Extract directory from filename
+      filename = $3
+      split(filename, parts, "/")
+      if (length(parts) > 1) {
+        dir = parts[1]
+      } else {
+        dir = "(root)"
+      }
+      # Sum additions and deletions
+      words = $1 + $2
+      dir_count[dir] += words
+    }
+    END {
+      for (dir in dir_count) {
+        printf "%10d  %s/\n", dir_count[dir], dir
+      }
+    }' | sort -rn | head -10
+
+    echo ""
+    echo "💡 To exclude a path, add it to the ignored_paths array in this script:"
+    echo "   Edit: ~/dotfiles-local/functions/pr-autofill-description.sh"
+    echo "   Add entries like: 'path/to/exclude/' or '*.extension'"
+    echo ""
+  }
+
   # Check for required dependencies
   check_dependencies() {
     local missing_tools=()
@@ -101,7 +181,8 @@ pr-autofill-description() {
       echo ""
       echo "Here are the git changes:"
       echo ""
-      if ! git diff "$merge_target"...HEAD 2>/dev/null; then
+      local exclusions=($(build_diff_exclusions))
+      if ! git diff "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null; then
         echo "Error: Could not generate git diff"
         exit 1
       fi
@@ -245,7 +326,8 @@ pr-autofill-description() {
   determine_merge_target || return 1
 
   # Count words in the diff
-  if ! diff_content=$(git diff "$merge_target"...HEAD 2>/dev/null); then
+  local exclusions=($(build_diff_exclusions))
+  if ! diff_content=$(git diff "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null); then
     echo "❌ Error: Could not generate git diff between '$merge_target' and '$current_branch'"
     return 1
   fi
@@ -260,6 +342,12 @@ pr-autofill-description() {
     echo "This could mean:"
     echo "  - No actual changes between '$merge_target' and '$current_branch'"
     echo "  - You're comparing the same branch against itself"
+    return 1
+  fi
+
+  # Check if diff is too large
+  if [ "$word_count" -gt "$max_word_count" ]; then
+    analyze_diff_size
     return 1
   fi
 
