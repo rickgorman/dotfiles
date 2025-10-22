@@ -167,7 +167,7 @@ alias clean_vcr='git restore spec/vcr_cassettes; git clean -fd spec/vcr_cassette
 # Git branch pruning
 source ~/dotfiles-local/functions/gpruneomg.sh
 
-alias develop='git checkout develop'
+alias develop='git checkout develop && g pull'
 
 ########################
 # Ruby                 #
