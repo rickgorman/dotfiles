@@ -315,3 +315,5 @@ source ~/dotfiles-local/functions/ffmpeg_two_pass.sh
 
 # Movie file processor
 source ~/dotfiles-local/functions/movie.sh
+# Emoji helper
+source ~/dotfiles-local/functions/emoji.sh
