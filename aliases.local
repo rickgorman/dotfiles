@@ -3,9 +3,17 @@
 echo "*** now executing aliases.local"
 
 ########################
+#  Load Functions      #
+########################
+# Recursively source all .sh files in ~/dotfiles-local/functions/
+shopt -s globstar 2>/dev/null
+for function_file in ~/dotfiles-local/functions/**/*.sh; do
+  [[ -f "$function_file" ]] && source "$function_file"
+done
+
+########################
 #  Package Mgmt        #
 ########################
-
 alias bbd="brew bundle dump --force"
 
 ########################
@@ -58,7 +66,6 @@ alias extension='cd ~/work/extension'
 ########################
 #  Utilities           #
 ########################
-
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
@@ -112,7 +119,6 @@ alias p="pbpaste"
 ########################
 #  Better tools        #
 ########################
-
 man() {
   env MANPAGER="sh -c 'col -bx | bat -l man -p'" /usr/bin/man "$@"
 }
@@ -120,43 +126,41 @@ man() {
 ########################
 #  Claude              #
 ########################
-
 alias cc="claude"
 
 ########################
 #  Git                 #
 #################ß######
+alias ga='git add'
 alias gad='git add . && git status'
-alias gr='git reset HEAD --'
+alias gbb='git bisect bad'
+alias gbg='git bisect good'
+alias gc-='git checkout -'
 alias gcm='git commit -m'
 alias gco='git checkout'
-alias gc-='git checkout -'
-alias gs='git status'
-alias ga='git add'
+alias gcompare="git log --left-right --graph --cherry-pick --oneline"
+alias gcp='git cherry-pick'
 alias gd='git diff --ignore-all-space'
-alias gp='git push'
-alias gpo='git push -u origin $(git branch --show-current)'
 alias gds='git diff --staged --ignore-all-space'
-alias gpushom='git push origin ${MASTER_BRANCH_NAME}'
-alias gpullom='git pull origin ${MASTER_BRANCH_NAME}'
-alias gsl='git stash list'
-alias stash='git stash --include-untracked'
 alias gf='git fetch'
 alias gfa='git fetch --all'
-alias nb='git checkout -b'
-alias gcp='git cherry-pick'
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias gcompare="git log --left-right --graph --cherry-pick --oneline"
+alias gp='git push'
+alias gpfl='git push --force-with-lease'
+alias gpo='git push -u origin $(git branch --show-current)'
+alias gpullom='git pull origin ${MASTER_BRANCH_NAME}'
+alias gpushom='git push origin ${MASTER_BRANCH_NAME}'
+alias gr='git reset HEAD --'
+alias grc='git rebase --continue'
+alias grid='git rebase -i develop'
+alias grim='git rebase -i ${MASTER_BRANCH_NAME}'
+alias grs='git rebase --skip'
+alias gs='git status'
+alias gsl='git stash list'
 alias gsp="git stash pop"
 alias gssp='git stash show -p'
-alias grc='git rebase --continue'
-alias grs='git rebase --skip'
-alias gbg='git bisect good'
-alias gbb='git bisect bad'
-alias grim='git rebase -i ${MASTER_BRANCH_NAME}'
-alias grid='git rebase -i develop'
-alias main='git checkout main && g pull'
-alias gpfl='git push --force-with-lease'
+alias nb='git checkout -b'
+alias stash='git stash --include-untracked'
 
 # reset schema/structure files
 alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/structure.sql'
@@ -164,45 +168,14 @@ alias grss='git checkout HEAD db/schema.read-only.rb; git checkout HEAD db/struc
 # reset vcr_cassettes and remove untracked ones
 alias clean_vcr='git restore spec/vcr_cassettes; git clean -fd spec/vcr_cassettes'
 
-# Git branch pruning
-source ~/dotfiles-local/functions/gpruneomg.sh
-
+# common branch shortcuts
 alias develop='git checkout develop && g pull'
+alias main='git checkout main && g pull'
+alias master='git checkout master && g pull'
 
 ########################
 # Ruby                 #
 ########################
-
-update_ruby_version() {
-  if ! command -v asdf &> /dev/null; then
-    echo "Error: asdf is not installed or not in the PATH."
-    return 1
-  fi
-
-  if [[ ! -f .ruby-version ]]; then
-    echo "Error: .ruby-version not found. You're in the wrong directory, dude."
-    return 1
-  fi
-
-  ruby_version=$(cat .ruby-version | sed 's/^ruby-//')
-
-  echo "running asdf plugin update ruby..."
-  asdf plugin update ruby
-
-  echo "running asdf install ruby $ruby_version..."
-  if ! asdf install ruby "$ruby_version"; then
-    echo "Error: Failed to install Ruby version $ruby_version with asdf."
-    return 1
-  fi
-
-  # Step 6: Set the local Ruby version
-  asdf local ruby "$ruby_version"
-
-  # Step 7: Set the global Ruby version
-  asdf global ruby "$ruby_version"
-
-  echo "Ruby version $ruby_version installed and set (local and global)."
-}
 
 ########################
 # Rails                #
@@ -238,15 +211,15 @@ alias spof='sp; sof'
 #  Bundle              #
 ########################
 alias be='~/.asdf/shims/bundle exec'
-alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
+alias ber='be bin/rspec'
 alias brc='be rails c'
-alias brs='be rails s'
-alias brdm='be rails db:migrate'
 alias brdbm='brdm'
 alias brdbmr='be rails db:migrate; be rails db:rollback'
 alias brdbr='be rails db:drop RAILS_ENV=test && be rails db:create RAILS_ENV=test && be rails db:migrate RAILS_ENV=test'
+alias brdm='be rails db:migrate'
 alias brr='be rails routes | fzf'
+alias brs='be rails s'
 
 ########################
 #  Database            #
@@ -263,19 +236,6 @@ alias hr='heroku run'
 #######################
 # Github              #
 #######################
-
-# PR creation
-source ~/dotfiles-local/functions/newpr.sh
-
-# Squash merge helper
-source ~/dotfiles-local/functions/squash_merge.sh
-
-# PR description autofiller
-source ~/dotfiles-local/functions/pr-autofill-description.sh
-
-# Combined PR creation and auto-fill
-source ~/dotfiles-local/functions/newpra.sh
-
 alias pr="gh pr view --web"
 alias watchchecks="if sleep 4 && gh pr checks --watch -i 1 && sleep 2 && gh pr checks --watch -i 1; then yuri 'yuri says, ready for merge'; else yuri 'yuri says, no code for you, get new job'; circleci open; fi"
 alias ready="gh pr ready && gh pr edit --add-reviewer FlorenceHC/hedgehog"
@@ -285,15 +245,11 @@ alias checks="i18n-tasks health && i18n-tasks normalize && rubocop -a"
 #################################
 #  Process Management
 #################################
-
 alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;echo "✌️  DNS flushed"'
 alias k9postgres='brew services stop postgresql@17; k9 postgres; brew services start postgresql@17'
 alias k9puma='k9 puma; k9 puma-dev; k9 puma; k9 puma-dev'
 alias rrrr='k9puma; k9postgres; bundle exec rails db:drop db:create db:schema:load db:migrate db:seed;'
 alias plist='ps -ef | grep -v grep | grep'
-
-# Docker restart helper
-source ~/dotfiles-local/functions/docker_restart.sh
 
 k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 
@@ -301,19 +257,6 @@ k9() { ps -ef | grep -v grep | grep "$1" | awk '{print $2}' | xargs kill -9 }
 ######################
 # Depoliticize tools #
 ######################
-
 i18n() {
   i18n-tasks "$@" 2>/dev/null
 }
-
-#################
-# Video editing #
-#################
-
-# FFmpeg two-pass encoding
-source ~/dotfiles-local/functions/ffmpeg_two_pass.sh
-
-# Movie file processor
-source ~/dotfiles-local/functions/movie.sh
-# Emoji helper
-source ~/dotfiles-local/functions/emoji.sh
