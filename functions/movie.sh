@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 movie() {
   local minutes="${1:-75}"
@@ -17,20 +17,19 @@ movie() {
   done | sort -rn | cut -d'|' -f2)
 
   # Check if any files were found
-  if [ ${#files[@]} -eq 0 ]; then
+  if [ "${#files[@]}" -eq 0 ]; then
     echo "NONE - No MOV files found on Desktop from the last $minutes minutes"
     return 1
   fi
 
-  # Display the list
+  # Display the listr
   echo "Recent MOV files on Desktop (last $minutes minutes):"
-  for i in "${!files[@]}"; do
-    local display_num=$((i + 1))
+  for i in {1.."${#files[@]}"}; do
     local file_basename=$(basename "${files[$i]}")
-    if [ $i -eq 0 ]; then
-      echo "  $display_num) $file_basename (default)"
+    if [ $i -eq 1 ]; then
+      echo "  $i) $file_basename (default)"
     else
-      echo "  $display_num) $file_basename"
+      echo "  $i) $file_basename"
     fi
   done
 
@@ -44,20 +43,21 @@ movie() {
   fi
 
   # Validate selection
-  if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt ${#files[@]} ]; then
+  if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt "${#files[@]}" ]; then
     echo "Invalid selection"
     return 1
   fi
 
-  # Get the selected file (adjust for 0-based array)
-  local selected_file="${files[$((selection - 1))]}"
+  # Get the selected file (zsh arrays are 1-indexed)
+  local selected_file="${files[$selection]}"
   local dir_name=$(dirname "$selected_file")
   local base_name=$(basename "$selected_file")
   local name_without_ext="${base_name%.*}"
   local extension="${base_name##*.}"
 
+
   # Remove spaces from filename
-  local new_name="${name_without_ext:gs/ /_}.${extension}"
+  local new_name="$(echo "$name_without_ext" | tr ' ' '_').${extension}"
   local new_path="$dir_name/$new_name"
 
   # Rename if necessary
