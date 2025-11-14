@@ -1,13 +1,16 @@
 #!/bin/sh
 
-# todo: check that this script is being called from the dotfiles-local dir
-# spawn_dir=$(dirname -- $(readlink -f ${BASH_SOURCE}))
-# spawn_dir=$(pwd)
-# expected_dir="${HOME}/dotfiles-local"
-# if [ $spawn_dir != $expected_dir ]; then
-#   echo "this script must be run from the dotfiles-local/ directory"
-#   exit
-# fi
+# Function to check if the script is being run from the dotfiles-local/ directory
+check_directory() {
+  local spawn_dir=$(pwd)
+  local expected_dir="${HOME}/dotfiles-local"
+
+  if [[ "$spawn_dir" != "$expected_dir" ]]; then
+    echo "Error: This script must be run from the dotfiles-local/ directory."
+    exit 1
+  fi
+}
+check_directory
 
 # todo: make sure that the zsh/ scripts are being called (just chpwd for now)
 
@@ -34,7 +37,6 @@ ln -s ~/dotfiles-local/code/keybindings.json ~/Library/Application\ Support/Code
 mv ~/Library/Application\ Support/Code/User/settings.json ~/Library/Application\ Support/Code/User/settings.json.bak
 ln -s ~/dotfiles-local/code/settings.json ~/Library/Application\ Support/Code/User/settings.json
 
-
 # this will rebuild symlinks; use from cli when needed
 rcup
 
@@ -44,6 +46,12 @@ rcup
 
 # install everything from the Brewfile
 brew bundle
+
+######
+# gh #
+######
+
+gh config set -h github.com git_protocol https
 
 ########
 # asdf #

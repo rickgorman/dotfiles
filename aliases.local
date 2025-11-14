@@ -56,6 +56,12 @@ alias web='cd ~/work/web'
 alias extension='cd ~/work/extension'
 
 ########################
+#  App shortcuts       #
+########################
+
+alias v='$VISUAL'
+
+########################
 #  Utilities           #
 ########################
 
@@ -233,6 +239,7 @@ alias spof='sp; sof'
 ########################
 #  Bundle              #
 ########################
+alias b='bundle'
 alias be='~/.asdf/shims/bundle exec'
 alias ber='be bin/rspec'
 alias beg='be guard -P livereload'
