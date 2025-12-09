@@ -8,97 +8,52 @@ pr-autofill-description() {
   # Declare all shared variables as local
   local current_branch merge_target temp_file pr_number claude_pid diff_content word_count
   local interrupted=false
+  local retry_file=""
 
-  # Maximum word count for diff (to avoid token limit issues)
-  local max_word_count=30000
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --retry)
+        if [ -z "$2" ] || [[ "$2" == --* ]]; then
+          echo "❌ --retry requires a file path"
+          return 1
+        fi
+        retry_file="$2"
+        shift 2
+        ;;
+      *)
+        echo "❌ Unknown argument: $1"
+        echo "Usage: pr-autofill-description [--retry <file>]"
+        return 1
+        ;;
+    esac
+  done
 
-  # Paths to ignore when generating diff (reduce noise and token usage)
-  local -a ignored_paths=(
-    'spec/vcr_cassettes/'
-  )
-
-  # Build git diff exclusion arguments
-  build_diff_exclusions() {
-    local exclusions=()
-    for path in "${ignored_paths[@]}"; do
-      exclusions+=(":(exclude)$path")
-    done
-    echo "${exclusions[@]}"
-  }
-
-  # Analyze diff and show word count by extension and directory
-  analyze_diff_size() {
-    local exclusions=($(build_diff_exclusions))
-
-    echo ""
-    echo "❌ Diff is too large ($word_count words, limit is $max_word_count)"
-    echo ""
-    echo "To reduce the diff size, consider excluding some paths."
-    echo "Here's a breakdown to help you decide what to exclude:"
-    echo ""
-
-    # Get numstat for word counts per file
-    local stats=$(git diff --numstat "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null)
-
-    # Analyze by file extension
-    echo "📊 Top file extensions by word count:"
-    echo "$stats" | awk '{
-      # Extract extension from filename
-      filename = $3
-      split(filename, parts, ".")
-      if (length(parts) > 1) {
-        ext = parts[length(parts)]
-      } else {
-        ext = "(no extension)"
-      }
-      # Sum additions and deletions
-      words = $1 + $2
-      ext_count[ext] += words
-    }
-    END {
-      for (ext in ext_count) {
-        printf "%10d  %s\n", ext_count[ext], ext
-      }
-    }' | sort -rn | head -10
-
-    echo ""
-    echo "📁 Top directories by word count:"
-    echo "$stats" | awk '{
-      # Extract directory from filename
-      filename = $3
-      split(filename, parts, "/")
-      if (length(parts) > 1) {
-        dir = parts[1]
-      } else {
-        dir = "(root)"
-      }
-      # Sum additions and deletions
-      words = $1 + $2
-      dir_count[dir] += words
-    }
-    END {
-      for (dir in dir_count) {
-        printf "%10d  %s/\n", dir_count[dir], dir
-      }
-    }' | sort -rn | head -10
-
-    echo ""
-    echo "💡 To exclude a path, add it to the ignored_paths array in this script:"
-    echo "   Edit: ~/dotfiles-local/functions/pr-autofill-description.sh"
-    echo "   Add entries like: 'path/to/exclude/' or '*.extension'"
-    echo ""
-  }
+  # Chunk size for map-reduce (in words)
+  local CHUNK_SIZE=25000
 
   # Check for required dependencies
   check_dependencies() {
     local missing_tools=()
     command -v git >/dev/null || missing_tools+=("git")
     command -v gh >/dev/null || missing_tools+=("gh")
-    command -v claude >/dev/null || missing_tools+=("claude")
+    # Only require claude if not in retry mode
+    [ -z "$retry_file" ] && command -v claude >/dev/null || missing_tools+=("claude")
     command -v jq >/dev/null || missing_tools+=("jq")
 
-    if [ ${#missing_tools[@]} -gt 0 ]; then
-      echo "❌ Missing required tools: ${missing_tools[*]}"
+    # Remove "claude" from missing_tools if in retry mode
+    if [ -n "$retry_file" ]; then
+      missing_tools=("${missing_tools[@]/claude/}")
+    fi
+
+    # Filter out empty elements
+    local filtered_tools=()
+    for tool in "${missing_tools[@]}"; do
+      [ -n "$tool" ] && filtered_tools+=("$tool")
+    done
+
+    if [ ${#filtered_tools[@]} -gt 0 ]; then
+      echo "❌ Missing required tools: ${filtered_tools[*]}"
       echo "Please install the missing tools before running this script"
       return 1
     fi
@@ -152,26 +107,291 @@ pr-autofill-description() {
     fi
   }
 
-  generate_description_with_claude() {
-    # Check if interrupted before starting
-    if [ "$interrupted" = true ]; then
-      return 1
-    fi
-
-    local template_file="$HOME/dotfiles-local/templates/pr_description.md"
-    local claude_path
-
-    # Find claude binary
+  # Get claude binary path
+  get_claude_path() {
     if command -v claude >/dev/null; then
-      claude_path="claude"
+      echo "claude"
     elif [ -x "/opt/homebrew/bin/claude" ]; then
-      claude_path="/opt/homebrew/bin/claude"
+      echo "/opt/homebrew/bin/claude"
     else
-      echo "❌ Could not find claude binary"
-      return 1
+      echo ""
+    fi
+  }
+
+  # Split a single file's diff at hunk boundaries (@@ ... @@)
+  # Used when a single file exceeds CHUNK_SIZE
+  # Outputs chunks to output_dir with prefix, starting at start_num
+  # Returns the next chunk number to use
+  split_file_at_hunks() {
+    local file_diff="$1"
+    local output_dir="$2"
+    local prefix="$3"
+    local start_num="$4"
+
+    local file_header=""
+    local current_hunk=""
+    local current_chunk=""
+    local current_word_count=0
+    local chunk_num=$start_num
+    local in_header=true
+
+    while IFS= read -r line; do
+      # Collect file header (everything before first @@)
+      if [ "$in_header" = true ]; then
+        if [[ "$line" =~ ^@@.*@@ ]]; then
+          in_header=false
+          current_hunk="$line"
+        else
+          if [ -n "$file_header" ]; then
+            file_header="$file_header"$'\n'"$line"
+          else
+            file_header="$line"
+          fi
+        fi
+        continue
+      fi
+
+      # At a new hunk boundary
+      if [[ "$line" =~ ^@@.*@@ ]]; then
+        # Add previous hunk to current chunk
+        if [ -n "$current_hunk" ]; then
+          local hunk_words=$(echo "$current_hunk" | wc -w | xargs)
+
+          # If adding this hunk would exceed limit, save current chunk first
+          if [ $((current_word_count + hunk_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+            echo "$file_header"$'\n'"$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+            chunk_num=$((chunk_num + 1))
+            current_chunk=""
+            current_word_count=0
+          fi
+
+          # Add hunk to current chunk
+          if [ -n "$current_chunk" ]; then
+            current_chunk="$current_chunk"$'\n'"$current_hunk"
+          else
+            current_chunk="$current_hunk"
+          fi
+          current_word_count=$((current_word_count + hunk_words))
+        fi
+
+        current_hunk="$line"
+      else
+        # Add line to current hunk
+        if [ -n "$current_hunk" ]; then
+          current_hunk="$current_hunk"$'\n'"$line"
+        else
+          current_hunk="$line"
+        fi
+      fi
+    done <<< "$file_diff"
+
+    # Handle last hunk
+    if [ -n "$current_hunk" ]; then
+      local hunk_words=$(echo "$current_hunk" | wc -w | xargs)
+
+      if [ $((current_word_count + hunk_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+        echo "$file_header"$'\n'"$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+        chunk_num=$((chunk_num + 1))
+        current_chunk="$current_hunk"
+      else
+        if [ -n "$current_chunk" ]; then
+          current_chunk="$current_chunk"$'\n'"$current_hunk"
+        else
+          current_chunk="$current_hunk"
+        fi
+      fi
     fi
 
-    set +m
+    # Save final chunk
+    if [ -n "$current_chunk" ]; then
+      echo "$file_header"$'\n'"$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+      chunk_num=$((chunk_num + 1))
+    fi
+
+    # Return next chunk number
+    echo "$chunk_num"
+  }
+
+  # Split a single diff into sub-chunks of approximately CHUNK_SIZE words
+  # Used when a commit diff is too large
+  # First splits at file boundaries, then splits large files at hunk boundaries
+  split_large_diff() {
+    local diff_content="$1"
+    local output_dir="$2"
+    local prefix="$3"
+
+    local current_file=""
+    local current_chunk=""
+    local current_chunk_words=0
+    local chunk_num=1
+
+    # Helper to process a completed file
+    process_file() {
+      local file_content="$1"
+      [ -z "$file_content" ] && return
+
+      local file_words=$(echo "$file_content" | wc -w | xargs)
+
+      # If this single file exceeds chunk size, split it at hunks
+      if [ "$file_words" -ge "$CHUNK_SIZE" ]; then
+        # Save current chunk first if we have one
+        if [ -n "$current_chunk" ]; then
+          echo "$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+          chunk_num=$((chunk_num + 1))
+          current_chunk=""
+          current_chunk_words=0
+        fi
+        # Split the large file at hunk boundaries
+        chunk_num=$(split_file_at_hunks "$file_content" "$output_dir" "$prefix" "$chunk_num")
+      # If adding this file would exceed limit, save current chunk first
+      elif [ $((current_chunk_words + file_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+        echo "$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+        chunk_num=$((chunk_num + 1))
+        current_chunk="$file_content"
+        current_chunk_words=$file_words
+      else
+        # Add file to current chunk
+        if [ -n "$current_chunk" ]; then
+          current_chunk="$current_chunk"$'\n'"$file_content"
+        else
+          current_chunk="$file_content"
+        fi
+        current_chunk_words=$((current_chunk_words + file_words))
+      fi
+    }
+
+    # Process line by line, accumulating by file
+    while IFS= read -r line; do
+      # Detect new file header
+      if [[ "$line" =~ ^diff\ --git ]]; then
+        # Process the previous file
+        process_file "$current_file"
+        current_file="$line"
+      else
+        # Add line to current file
+        if [ -n "$current_file" ]; then
+          current_file="$current_file"$'\n'"$line"
+        else
+          current_file="$line"
+        fi
+      fi
+    done <<< "$diff_content"
+
+    # Process the last file
+    process_file "$current_file"
+
+    # Save any remaining chunk
+    if [ -n "$current_chunk" ]; then
+      echo "$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
+    fi
+  }
+
+  # Split diff by commit boundaries
+  # If commits are small enough, use them as chunks
+  # If a commit is too large, split it further by file boundaries
+  split_diff_into_chunks() {
+    local target_branch="$1"
+    local full_diff="$2"
+    local chunk_dir=$(mktemp -d)
+    local chunk_number=1
+
+    # Get list of commits in the branch
+    local commits=$(git rev-list --reverse "${target_branch}"..HEAD 2>/dev/null)
+
+    if [ -z "$commits" ]; then
+      # Fallback: just use the full diff as one chunk
+      echo "$full_diff" > "$chunk_dir/chunk_1.txt"
+      echo "$chunk_dir"
+      return
+    fi
+
+    # Process each commit (use process substitution to avoid subshell)
+    while IFS= read -r commit; do
+      [ -z "$commit" ] && continue
+
+      local commit_diff=$(git show --format="" "$commit" 2>/dev/null)
+      local commit_words=$(echo "$commit_diff" | wc -w | xargs)
+      local commit_msg=$(git log -1 --format="%s" "$commit" 2>/dev/null)
+
+      if [ "$commit_words" -eq 0 ]; then
+        continue
+      fi
+
+      if [ "$commit_words" -le "$CHUNK_SIZE" ]; then
+        # Commit is small enough, use as-is
+        {
+          echo "=== Commit: $commit_msg ==="
+          echo ""
+          echo "$commit_diff"
+        } > "$chunk_dir/chunk_${chunk_number}.txt"
+        chunk_number=$((chunk_number + 1))
+      else
+        # Commit is too large, split by file boundaries
+        echo "Commit '$commit_msg' is $commit_words words, splitting further..." >&2
+        local temp_split_dir=$(mktemp -d)
+        split_large_diff "$commit_diff" "$temp_split_dir" "split"
+        # Count how many parts were created
+        local parts=$(ls "$temp_split_dir"/split_part*.txt 2>/dev/null | wc -l | xargs)
+        if [ "$parts" -gt 0 ]; then
+          # Move parts to chunk dir with sequential numbers and commit context
+          local part_num=1
+          for part_file in "$temp_split_dir"/split_part*.txt; do
+            {
+              echo "=== Commit: $commit_msg (part $part_num of $parts) ==="
+              echo ""
+              cat "$part_file"
+            } > "$chunk_dir/chunk_${chunk_number}.txt"
+            chunk_number=$((chunk_number + 1))
+            part_num=$((part_num + 1))
+          done
+        fi
+        rm -rf "$temp_split_dir"
+      fi
+    done <<< "$commits"
+
+    echo "$chunk_dir"
+  }
+
+  # Summarize a single chunk of diff
+  summarize_chunk() {
+    local chunk_file="$1"
+    local chunk_num="$2"
+    local total_chunks="$3"
+    local output_file="$4"
+    local claude_path="$5"
+    local chunk_label="$6"
+
+    cat "$chunk_file" | "$claude_path" -p "Summarize the key changes in this git diff. Focus on:
+- What files were modified
+- What functionality was added, changed, or removed
+- Any important implementation details
+
+Be concise but comprehensive. This summary will be combined with others to create a PR description.
+Return ONLY the summary - no intro text, no markdown code blocks." > "$output_file" 2>&1
+
+    return $?
+  }
+
+  # Extract chunk label from chunk file (first line contains === Commit: ... ===)
+  get_chunk_label() {
+    local chunk_file="$1"
+    local first_line=$(head -1 "$chunk_file")
+    # Extract text between "=== Commit: " and " ===" using sed
+    local label=$(echo "$first_line" | sed -n 's/^=== Commit: \(.*\) ===$/\1/p')
+    if [ -n "$label" ]; then
+      echo "$label"
+    else
+      echo "chunk"
+    fi
+  }
+
+  # Combine chunk summaries into final PR description
+  combine_summaries() {
+    local summaries_dir="$1"
+    local template_file="$2"
+    local output_file="$3"
+    local claude_path="$4"
+
     (
       echo "Here is my PR description template:"
       echo ""
@@ -179,21 +399,196 @@ pr-autofill-description() {
       echo ""
       echo "---"
       echo ""
-      echo "Here are the git changes:"
+      echo "Here are summaries of all the changes in this PR (the diff was too large to process at once):"
       echo ""
-      local exclusions=($(build_diff_exclusions))
-      if ! git diff "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null; then
-        echo "Error: Could not generate git diff"
-        exit 1
+      for summary_file in "$summaries_dir"/summary_*.txt; do
+        if [ -f "$summary_file" ]; then
+          echo "=== Changes Part $(basename "$summary_file" | sed 's/summary_\([0-9]*\)\.txt/\1/') ==="
+          cat "$summary_file"
+          echo ""
+        fi
+      done
+    ) | "$claude_path" -p "Hey! Can you help me fill out this PR description? I've given you summaries of all the changes (the full diff was too large). Synthesize these summaries into a cohesive PR description using the template.
+
+Keep it casual and conversational - imagine you're explaining the changes to a teammate over coffee. No need to be super formal or use fancy words. Just explain what you did and why in a way that makes sense. Skip any corporate-speak or overly professional language. If something's a quick fix or cleanup, just say that.
+
+IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based on...' intro, no explanations. Just start with '# Summary' and fill in the template." > "$output_file" 2>&1
+
+    return $?
+  }
+
+  generate_description_with_claude() {
+    # Check if interrupted before starting
+    if [ "$interrupted" = true ]; then
+      return 1
+    fi
+
+    local template_file="$HOME/dotfiles-local/templates/pr_description.md"
+    local claude_path=$(get_claude_path)
+
+    if [ -z "$claude_path" ]; then
+      echo "❌ Could not find claude binary"
+      return 1
+    fi
+
+    # Check if we need map-reduce (diff is too large)
+    if [ "$word_count" -gt "$CHUNK_SIZE" ]; then
+      echo "Large diff detected ($word_count words). Using map-reduce strategy..."
+
+      # Split diff into chunks
+      local chunk_dir=$(split_diff_into_chunks "$merge_target" "$diff_content")
+      local num_chunks=$(ls "$chunk_dir"/chunk_*.txt 2>/dev/null | wc -l | xargs)
+      echo "Split into $num_chunks chunks"
+
+      if [ "$num_chunks" -eq 0 ]; then
+        echo "❌ Failed to split diff into chunks"
+        rm -rf "$chunk_dir"
+        return 1
       fi
-    ) | "$claude_path" -p "Hey! Can you help me fill out this PR description? Look at the changes and fill in the template with what's actually changing. Keep it casual and conversational - imagine you're explaining the changes to a teammate over coffee. No need to be super formal or use fancy words. Just explain what you did and why in a way that makes sense. Skip any corporate-speak or overly professional language. If something's a quick fix or cleanup, just say that. IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based on...' intro, no explanations. Just start with '# Summary' and fill in the template." > "$temp_file" 2>&1 &
 
-    claude_pid=$!
+      # Create summaries directory
+      local summaries_dir=$(mktemp -d)
 
-    show_spinner $claude_pid "Generating PR description with Claude"
-    wait $claude_pid 2>/dev/null
-    local claude_exit_code=$?
-    set -m
+      # Process each chunk in parallel (map phase)
+      local pids=()
+      local chunk_labels=()
+      local chunk_files_arr=()
+      local chunk_num=1
+
+      echo ""
+      echo "📤 Sending chunks to Claude..."
+      echo ""
+
+      set +m
+      for chunk_file in "$chunk_dir"/chunk_*.txt; do
+        local summary_file="$summaries_dir/summary_$chunk_num.txt"
+        local label=$(get_chunk_label "$chunk_file")
+        local word_count=$(wc -w < "$chunk_file" | xargs)
+
+        echo "  -> [$chunk_num/$num_chunks] $label ($word_count words)"
+
+        summarize_chunk "$chunk_file" "$chunk_num" "$num_chunks" "$summary_file" "$claude_path" "$label" &
+        pids+=($!)
+        chunk_labels+=("$label")
+        chunk_files_arr+=("$chunk_file")
+        chunk_num=$((chunk_num + 1))
+      done
+
+      echo ""
+      echo "📥 Waiting for responses..."
+      echo ""
+
+      # Track which jobs we've already reported as complete
+      local reported=()
+      local num_pids=${#pids[@]}
+      local i=0
+      while [ $i -lt $num_pids ]; do
+        reported+=("0")
+        i=$((i + 1))
+      done
+
+      local completed=0
+      local failed=false
+
+      while [ $completed -lt $num_pids ]; do
+        if [ "$interrupted" = true ]; then
+          # Kill all running jobs
+          for pid in "${pids[@]}"; do
+            kill "$pid" 2>/dev/null
+          done
+          rm -rf "$chunk_dir" "$summaries_dir"
+          set -m
+          return 1
+        fi
+
+        # Check each job and report newly completed ones
+        i=0
+        while [ $i -lt $num_pids ]; do
+          if [ "${reported[$((i+1))]}" = "0" ] && ! kill -0 "${pids[$((i+1))]}" 2>/dev/null; then
+            reported[$((i+1))]="1"
+            local job_num=$((i + 1))
+            echo "  <- [$job_num/$num_chunks] ${chunk_labels[$((i+1))]}"
+          fi
+          i=$((i + 1))
+        done
+
+        # Count completed
+        completed=0
+        for r in "${reported[@]}"; do
+          [ "$r" = "1" ] && completed=$((completed + 1))
+        done
+
+        sleep 0.3
+      done
+
+      echo ""
+      set -m
+
+      # Check results of all jobs
+      i=0
+      while [ $i -lt $num_pids ]; do
+        local job_num=$((i + 1))
+        wait "${pids[$((i+1))]}"
+        local exit_code=$?
+        local summary_file="$summaries_dir/summary_$job_num.txt"
+
+        if [ "$exit_code" -ne 0 ] || [ ! -s "$summary_file" ]; then
+          echo "  ❌ Failed: ${chunk_labels[$((i+1))]}"
+          if [ -s "$summary_file" ]; then
+            echo "     Error: $(head -1 "$summary_file")"
+          fi
+          failed=true
+        fi
+        i=$((i + 1))
+      done
+
+      # Cleanup chunk files
+      rm -rf "$chunk_dir"
+
+      if [ "$failed" = true ]; then
+        rm -rf "$summaries_dir"
+        return 1
+      fi
+
+      # Combine summaries (reduce phase)
+      echo "🔄 Combining $num_chunks summaries into final PR description..."
+      echo ""
+
+      set +m
+      combine_summaries "$summaries_dir" "$template_file" "$temp_file" "$claude_path" &
+      claude_pid=$!
+      show_spinner $claude_pid "Generating final description"
+      wait $claude_pid 2>/dev/null
+      local claude_exit_code=$?
+      set -m
+
+      echo ""
+
+      # Cleanup summaries
+      rm -rf "$summaries_dir"
+
+    else
+      # Original single-pass logic for smaller diffs
+      set +m
+      (
+        echo "Here is my PR description template:"
+        echo ""
+        cat "$template_file" 2>/dev/null || echo "# Summary\n\n[Brief description of what this PR does]\n\n## Changes\n\n- [List key changes made]\n\n## Testing\n\n- [ ] Tests pass\n\n## Additional Notes\n\n[Any additional context]"
+        echo ""
+        echo "---"
+        echo ""
+        echo "Here are the git changes:"
+        echo ""
+        echo "$diff_content"
+      ) | "$claude_path" -p "Hey! Can you help me fill out this PR description? Look at the changes and fill in the template with what's actually changing. Keep it casual and conversational - imagine you're explaining the changes to a teammate over coffee. No need to be super formal or use fancy words. Just explain what you did and why in a way that makes sense. Skip any corporate-speak or overly professional language. If something's a quick fix or cleanup, just say that. IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based on...' intro, no explanations. Just start with '# Summary' and fill in the template." > "$temp_file" 2>&1 &
+
+      claude_pid=$!
+
+      show_spinner $claude_pid "Generating PR description with Claude"
+      wait $claude_pid 2>/dev/null
+      local claude_exit_code=$?
+      set -m
+    fi
 
     # Check if we were interrupted - if so, just return silently
     if [ "$interrupted" = true ]; then
@@ -306,7 +701,7 @@ pr-autofill-description() {
 
     echo "Updating PR #$pr_number description..."
 
-    if ! gh pr edit "$pr_number" --body-file "$temp_file" 2>/dev/null; then
+    if ! gh pr edit "$pr_number" --body-file "$temp_file"; then
       echo "❌ Failed to update PR description"
       echo "Generated description saved to: $temp_file"
       return 1
@@ -323,11 +718,33 @@ pr-autofill-description() {
   # Main execution flow
   check_dependencies || return 1
   validate_git_environment || return 1
+
+  # Retry mode: skip Claude, just re-attempt the PR update
+  if [ -n "$retry_file" ]; then
+    if [ ! -f "$retry_file" ]; then
+      echo "❌ File not found: $retry_file"
+      return 1
+    fi
+
+    echo "🔄 Retry mode: using saved description from $retry_file"
+
+    # Find the PR
+    find_current_pr || return 1
+
+    # Use the provided file as temp_file
+    temp_file="$retry_file"
+
+    # Go straight to review and update
+    review_description_in_editor || return 0
+    update_pr_description
+    return $?
+  fi
+
+  # Normal mode: generate description with Claude
   determine_merge_target || return 1
 
   # Count words in the diff
-  local exclusions=($(build_diff_exclusions))
-  if ! diff_content=$(git diff "$merge_target"...HEAD -- "${exclusions[@]}" 2>/dev/null); then
+  if ! diff_content=$(git diff "$merge_target"...HEAD 2>/dev/null); then
     echo "❌ Error: Could not generate git diff between '$merge_target' and '$current_branch'"
     return 1
   fi
@@ -345,12 +762,6 @@ pr-autofill-description() {
     return 1
   fi
 
-  # Check if diff is too large
-  if [ "$word_count" -gt "$max_word_count" ]; then
-    analyze_diff_size
-    return 1
-  fi
-
   # Check for existing PR before running Claude
   find_current_pr || return 1
 
@@ -363,6 +774,9 @@ pr-autofill-description() {
   temp_file=$(mktemp)
 
   generate_description_with_claude || return 1
+
+  # Always show the temp file location for --retry
+  echo "📄 Description saved to: $temp_file"
 
   # Check if interrupted after Claude
   if [ "$interrupted" = true ]; then
