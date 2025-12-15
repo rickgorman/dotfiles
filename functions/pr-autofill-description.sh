@@ -6,7 +6,7 @@ source "$HOME/dotfiles-local/functions/shared/show_spinner.sh"
 # Auto-fill PR description using Claude Code
 pr-autofill-description() {
   # Declare all shared variables as local
-  local current_branch merge_target temp_file pr_number claude_pid diff_content word_count
+  local current_branch merge_target temp_file pr_number claude_pid diff_content char_count
   local interrupted=false
   local retry_file=""
 
@@ -29,8 +29,9 @@ pr-autofill-description() {
     esac
   done
 
-  # Chunk size for map-reduce (in words)
-  local CHUNK_SIZE=25000
+  # Chunk size for map-reduce (in characters, not words)
+  # ~400k chars ≈ 100k tokens, safe for Opus (200k context) with prompt overhead
+  local CHUNK_SIZE=400000
 
   # Check for required dependencies
   check_dependencies() {
@@ -131,7 +132,7 @@ pr-autofill-description() {
     local file_header=""
     local current_hunk=""
     local current_chunk=""
-    local current_word_count=0
+    local current_char_count=0
     local chunk_num=$start_num
     local in_header=true
 
@@ -155,14 +156,14 @@ pr-autofill-description() {
       if [[ "$line" =~ ^@@.*@@ ]]; then
         # Add previous hunk to current chunk
         if [ -n "$current_hunk" ]; then
-          local hunk_words=$(echo "$current_hunk" | wc -w | xargs)
+          local hunk_chars=$(echo "$current_hunk" | wc -c | xargs)
 
           # If adding this hunk would exceed limit, save current chunk first
-          if [ $((current_word_count + hunk_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+          if [ $((current_char_count + hunk_chars)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
             echo "$file_header"$'\n'"$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
             chunk_num=$((chunk_num + 1))
             current_chunk=""
-            current_word_count=0
+            current_char_count=0
           fi
 
           # Add hunk to current chunk
@@ -171,7 +172,7 @@ pr-autofill-description() {
           else
             current_chunk="$current_hunk"
           fi
-          current_word_count=$((current_word_count + hunk_words))
+          current_char_count=$((current_char_count + hunk_chars))
         fi
 
         current_hunk="$line"
@@ -187,9 +188,9 @@ pr-autofill-description() {
 
     # Handle last hunk
     if [ -n "$current_hunk" ]; then
-      local hunk_words=$(echo "$current_hunk" | wc -w | xargs)
+      local hunk_chars=$(echo "$current_hunk" | wc -c | xargs)
 
-      if [ $((current_word_count + hunk_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+      if [ $((current_char_count + hunk_chars)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
         echo "$file_header"$'\n'"$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
         chunk_num=$((chunk_num + 1))
         current_chunk="$current_hunk"
@@ -222,7 +223,7 @@ pr-autofill-description() {
 
     local current_file=""
     local current_chunk=""
-    local current_chunk_words=0
+    local current_chunk_chars=0
     local chunk_num=1
 
     # Helper to process a completed file
@@ -230,25 +231,25 @@ pr-autofill-description() {
       local file_content="$1"
       [ -z "$file_content" ] && return
 
-      local file_words=$(echo "$file_content" | wc -w | xargs)
+      local file_chars=$(echo "$file_content" | wc -c | xargs)
 
       # If this single file exceeds chunk size, split it at hunks
-      if [ "$file_words" -ge "$CHUNK_SIZE" ]; then
+      if [ "$file_chars" -ge "$CHUNK_SIZE" ]; then
         # Save current chunk first if we have one
         if [ -n "$current_chunk" ]; then
           echo "$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
           chunk_num=$((chunk_num + 1))
           current_chunk=""
-          current_chunk_words=0
+          current_chunk_chars=0
         fi
         # Split the large file at hunk boundaries
         chunk_num=$(split_file_at_hunks "$file_content" "$output_dir" "$prefix" "$chunk_num")
       # If adding this file would exceed limit, save current chunk first
-      elif [ $((current_chunk_words + file_words)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
+      elif [ $((current_chunk_chars + file_chars)) -ge "$CHUNK_SIZE" ] && [ -n "$current_chunk" ]; then
         echo "$current_chunk" > "$output_dir/${prefix}_part${chunk_num}.txt"
         chunk_num=$((chunk_num + 1))
         current_chunk="$file_content"
-        current_chunk_words=$file_words
+        current_chunk_chars=$file_chars
       else
         # Add file to current chunk
         if [ -n "$current_chunk" ]; then
@@ -256,7 +257,7 @@ pr-autofill-description() {
         else
           current_chunk="$file_content"
         fi
-        current_chunk_words=$((current_chunk_words + file_words))
+        current_chunk_chars=$((current_chunk_chars + file_chars))
       fi
     }
 
@@ -310,14 +311,14 @@ pr-autofill-description() {
       [ -z "$commit" ] && continue
 
       local commit_diff=$(git show --format="" "$commit" 2>/dev/null)
-      local commit_words=$(echo "$commit_diff" | wc -w | xargs)
+      local commit_chars=$(echo "$commit_diff" | wc -c | xargs)
       local commit_msg=$(git log -1 --format="%s" "$commit" 2>/dev/null)
 
-      if [ "$commit_words" -eq 0 ]; then
+      if [ "$commit_chars" -eq 0 ]; then
         continue
       fi
 
-      if [ "$commit_words" -le "$CHUNK_SIZE" ]; then
+      if [ "$commit_chars" -le "$CHUNK_SIZE" ]; then
         # Commit is small enough, use as-is
         {
           echo "=== Commit: $commit_msg ==="
@@ -327,7 +328,7 @@ pr-autofill-description() {
         chunk_number=$((chunk_number + 1))
       else
         # Commit is too large, split by file boundaries
-        echo "Commit '$commit_msg' is $commit_words words, splitting further..." >&2
+        echo "Commit '$commit_msg' is $commit_chars chars, splitting further..." >&2
         local temp_split_dir=$(mktemp -d)
         split_large_diff "$commit_diff" "$temp_split_dir" "split"
         # Count how many parts were created
@@ -361,6 +362,10 @@ pr-autofill-description() {
     local claude_path="$5"
     local chunk_label="$6"
 
+    # Debug: log actual file size and character count
+    local char_count=$(wc -c < "$chunk_file" | xargs)
+    local line_count=$(wc -l < "$chunk_file" | xargs)
+
     cat "$chunk_file" | "$claude_path" -p "Summarize the key changes in this git diff. Focus on:
 - What files were modified
 - What functionality was added, changed, or removed
@@ -368,8 +373,20 @@ pr-autofill-description() {
 
 Be concise but comprehensive. This summary will be combined with others to create a PR description.
 Return ONLY the summary - no intro text, no markdown code blocks." > "$output_file" 2>&1
+    local result=$?
 
-    return $?
+    # On failure, append debug info to output
+    if [ $result -ne 0 ]; then
+      echo "" >> "$output_file"
+      echo "--- Debug Info ---" >> "$output_file"
+      echo "Chunk: $chunk_num of $total_chunks" >> "$output_file"
+      echo "Characters: $char_count" >> "$output_file"
+      echo "Lines: $line_count" >> "$output_file"
+      echo "Claude path: $claude_path" >> "$output_file"
+      echo "Claude version: $("$claude_path" --version 2>&1 || echo 'unknown')" >> "$output_file"
+    fi
+
+    return $result
   }
 
   # Extract chunk label from chunk file (first line contains === Commit: ... ===)
@@ -432,8 +449,8 @@ IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based 
     fi
 
     # Check if we need map-reduce (diff is too large)
-    if [ "$word_count" -gt "$CHUNK_SIZE" ]; then
-      echo "Large diff detected ($word_count words). Using map-reduce strategy..."
+    if [ "$char_count" -gt "$CHUNK_SIZE" ]; then
+      echo "Large diff detected ($char_count chars). Using map-reduce strategy..."
 
       # Split diff into chunks
       local chunk_dir=$(split_diff_into_chunks "$merge_target" "$diff_content")
@@ -463,9 +480,9 @@ IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based 
       for chunk_file in "$chunk_dir"/chunk_*.txt; do
         local summary_file="$summaries_dir/summary_$chunk_num.txt"
         local label=$(get_chunk_label "$chunk_file")
-        local word_count=$(wc -w < "$chunk_file" | xargs)
+        local char_count=$(wc -c < "$chunk_file" | xargs)
 
-        echo "  -> [$chunk_num/$num_chunks] $label ($word_count words)"
+        echo "  -> [$chunk_num/$num_chunks] $label ($char_count chars)"
 
         summarize_chunk "$chunk_file" "$chunk_num" "$num_chunks" "$summary_file" "$claude_path" "$label" &
         pids+=($!)
@@ -531,11 +548,21 @@ IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based 
         wait "${pids[$((i+1))]}"
         local exit_code=$?
         local summary_file="$summaries_dir/summary_$job_num.txt"
+        local chunk_file="${chunk_files_arr[$((i+1))]}"
 
         if [ "$exit_code" -ne 0 ] || [ ! -s "$summary_file" ]; then
           echo "  ❌ Failed: ${chunk_labels[$((i+1))]}"
+          echo "     Exit code: $exit_code"
           if [ -s "$summary_file" ]; then
-            echo "     Error: $(head -1 "$summary_file")"
+            echo "     Error output:"
+            sed 's/^/       /' "$summary_file"
+          else
+            echo "     (no output captured)"
+          fi
+          if [ -n "$chunk_file" ] && [ -f "$chunk_file" ]; then
+            local debug_file="/tmp/pr-autofill-failed-chunk-${job_num}.txt"
+            cp "$chunk_file" "$debug_file"
+            echo "     Chunk saved to: $debug_file"
           fi
           failed=true
         fi
@@ -748,12 +775,12 @@ IMPORTANT: Return ONLY the filled template - no markdown code blocks, no 'Based 
     echo "❌ Error: Could not generate git diff between '$merge_target' and '$current_branch'"
     return 1
   fi
-  word_count=$(echo "$diff_content" | wc -w | xargs)
+  char_count=$(echo "$diff_content" | wc -c | xargs)
 
-  echo "Analyzing changes on branch '$current_branch' vs '$merge_target'... $word_count words/tokens changed."
+  echo "Analyzing changes on branch '$current_branch' vs '$merge_target'... $char_count chars changed."
 
   # Check if there are any changes to process
-  if [ "$word_count" -eq 0 ]; then
+  if [ "$char_count" -eq 0 ]; then
     echo ""
     echo "❌ No changes found to generate PR description from."
     echo "This could mean:"
