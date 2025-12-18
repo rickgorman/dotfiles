@@ -135,6 +135,11 @@ man() {
 alias cc="claude"
 
 ########################
+#  Project Setup       #
+########################
+alias start-project='~/dotfiles-local/.bin/start-project'
+
+########################
 #  Git                 #
 #################ß######
 alias ga='git add'

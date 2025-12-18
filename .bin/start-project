@@ -1,0 +1,244 @@
+#!/bin/bash
+set -e
+
+# Get the directory name for repo naming
+PROJECT_NAME="${1:-$(basename "$PWD")}"
+
+echo "Initializing project: $PROJECT_NAME"
+echo ""
+
+# 1. Initialize git
+if [ ! -d .git ]; then
+    git init
+    echo "Git initialized"
+else
+    echo "Git already initialized"
+fi
+
+# 2. Initialize bd (beads issue tracker)
+if [ ! -d .beads ]; then
+    bd init
+    echo "bd initialized"
+else
+    echo "bd already initialized"
+fi
+
+# Install bd git hooks (auto-select chain option)
+echo "1" | bd hooks install 2>/dev/null || echo "bd hooks already installed or skipped"
+
+# 3. Create .gitignore
+cat > .gitignore << 'EOF'
+# bd (beads) - SQLite cache (JSONL is the source of truth)
+.beads/beads.db
+.beads/*.db-wal
+.beads/*.db-shm
+
+# AI planning documents (ephemeral) - uncomment to ignore
+# history/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.env
+.env.local
+EOF
+echo ".gitignore created"
+
+# 4. Create AGENTS.md
+cat > AGENTS.md << 'EOF'
+# AGENTS.md
+
+## Issue Tracking with bd (beads)
+
+**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
+
+### Why bd?
+
+- **Dependency-aware**: Track blockers and relationships between issues
+- **Git-friendly**: Auto-syncs to JSONL for version control
+- **Agent-optimized**: JSON output, ready work detection, discovered-from links
+- **Prevents duplicate tracking systems and confusion**
+
+### Quick Start
+
+**Check for ready work:**
+```bash
+bd ready --json
+```
+
+**Create new issues:**
+```bash
+bd create "Issue title" -t bug|feature|task -p 0-4 --json
+bd create "Issue title" -p 1 --deps discovered-from:bd-123 --json
+bd create "Subtask" --parent <epic-id> --json  # Hierarchical subtask
+```
+
+**Claim and update:**
+```bash
+bd update bd-42 --status in_progress --json
+bd update bd-42 --priority 1 --json
+```
+
+**Complete work:**
+```bash
+bd close bd-42 --reason "Completed" --json
+```
+
+### Issue Types
+
+| Type | Use For |
+|------|---------|
+| `bug` | Something broken |
+| `feature` | New functionality |
+| `task` | Work item (tests, docs, refactoring) |
+| `epic` | Large feature with subtasks |
+| `chore` | Maintenance (dependencies, tooling) |
+
+### Priorities
+
+| Priority | Meaning |
+|----------|---------|
+| `0` | Critical (security, data loss, broken builds) |
+| `1` | High (major features, important bugs) |
+| `2` | Medium (default, nice-to-have) |
+| `3` | Low (polish, optimization) |
+| `4` | Backlog (future ideas) |
+
+### Workflow for AI Agents
+
+1. **Check ready work**: `bd ready` shows unblocked issues
+2. **Claim your task**: `bd update <id> --status in_progress`
+3. **Work on it**: Implement, test, document
+4. **Discover new work?** Create linked issue:
+   - `bd create "Found bug" -p 1 --deps discovered-from:<parent-id>`
+5. **Complete**: `bd close <id> --reason "Done"`
+6. **Commit together**: Always commit `.beads/issues.jsonl` with code changes
+
+### Auto-Sync
+
+bd automatically syncs with git:
+- Exports to `.beads/issues.jsonl` after changes (5s debounce)
+- Imports from JSONL when newer (e.g., after `git pull`)
+- No manual export/import needed!
+
+### Visualize with bv
+
+Use `bv` for a TUI viewer:
+```bash
+bv                           # Interactive TUI
+bv -recipe actionable        # Filter by recipe
+bv -export-md report.md      # Export to markdown
+bv -robot-insights           # JSON insights for AI
+bv -robot-plan               # Dependency-respecting execution plan
+```
+
+### CLI Help
+
+Run `bd <command> --help` for all available flags.
+Examples:
+- `bd create --help` shows `--parent`, `--deps`, `--assignee`, etc.
+- `bd list --help` shows filtering options
+
+### Important Rules
+
+- Use bd for ALL task tracking
+- Always use `--json` flag for programmatic use
+- Link discovered work with `discovered-from` dependencies
+- Check `bd ready` before asking "what should I work on?"
+- Store AI planning docs in `history/` directory
+- Run `bd sync` at end of work sessions
+
+### DO NOT
+
+- Create markdown TODO lists
+- Use external issue trackers
+- Duplicate tracking systems
+- Clutter repo root with planning documents
+- Commit `.beads/beads.db` (JSONL only)
+
+---
+
+For more details: https://github.com/steveyegge/beads
+EOF
+echo "AGENTS.md created"
+
+# 5. Create history directory for AI planning docs
+mkdir -p history
+touch history/.gitkeep
+echo "history/ directory created"
+
+# 6. Initial commit
+git add .gitignore AGENTS.md .beads/ history/
+git commit -m "Initial project setup with bd (beads) issue tracking
+
+- Initialize git repository
+- Initialize bd issue tracker
+- Add AGENTS.md with workflow documentation
+- Add .gitignore for bd cache and common files
+- Create history/ for AI planning documents"
+
+echo ""
+echo "=== Local setup complete ==="
+echo ""
+
+# 7. Create GitHub repo and push
+echo "Creating GitHub repository..."
+if gh repo view "$PROJECT_NAME" &>/dev/null; then
+    echo "GitHub repo '$PROJECT_NAME' already exists, setting as remote..."
+    git remote add origin "git@github.com:$(gh api user -q .login)/$PROJECT_NAME.git" 2>/dev/null || \
+        git remote set-url origin "git@github.com:$(gh api user -q .login)/$PROJECT_NAME.git"
+else
+    gh repo create "$PROJECT_NAME" --private --source=. --remote=origin --push
+    echo "GitHub repo created and pushed"
+fi
+
+# Ensure we're pushed
+git push -u origin main 2>/dev/null || git push -u origin master 2>/dev/null || echo "Already pushed"
+
+echo ""
+echo "=== Testing bd sync with GitHub ==="
+echo ""
+
+# 8. Create a test issue
+echo "Creating test issue..."
+bd create "Test issue - verify bd sync works" -t task -p 3
+echo ""
+
+# 9. Sync to GitHub
+echo "Running bd sync to push issue to GitHub..."
+bd sync
+echo ""
+
+# 10. Verify by listing issues
+echo "Verifying issues synced:"
+bd list
+echo ""
+
+echo "=== Setup complete! ==="
+echo ""
+echo "Your project is ready with:"
+echo "  - Git repo initialized"
+echo "  - GitHub repo: https://github.com/$(gh api user -q .login)/$PROJECT_NAME"
+echo "  - bd (beads) issue tracker configured"
+echo "  - Test issue created and synced"
+echo "  - AGENTS.md with workflow docs"
+echo ""
+echo "Commands:"
+echo "  bd ready      # See ready work"
+echo "  bd create     # Create issues"
+echo "  bd sync       # Sync with GitHub"
+echo "  bv            # Visual TUI"
