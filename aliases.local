@@ -122,6 +122,10 @@ alias r9="sed -n '9p'"
 alias c="pbcopy"
 alias p="pbpaste"
 
+# execute piped command in current shell context
+alias x='while read cmd; do eval "$cmd"; done'
+alias spl='splitter'
+
 ########################
 #  Better tools        #
 ########################
