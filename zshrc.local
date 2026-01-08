@@ -50,6 +50,7 @@ eval $(thefuck --alias)
 # look for commands in these places
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 export PATH="$HOME/.bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # make vim the default text editor
 export EDITOR="vim"
@@ -67,6 +68,14 @@ export NVM_DIR="$HOME/.nvm"
 
 # default to main, allow overrides via dotenv
 export MASTER_BRANCH_NAME="main"
+
+###############
+### aliases ###
+###############
+
+alias t1='tree -L 1'
+alias t2='tree -L 2'
+alias t3='tree -L 3'
 
 #############
 ### other ###
