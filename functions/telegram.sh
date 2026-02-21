@@ -3,9 +3,8 @@
 #   echo "Hello world" | telegram
 #   cat file.txt | telegram
 #
-# Requires ~/.env with:
-#   TELEGRAM_BOT_TOKEN=your_bot_token
-#   TELEGRAM_CHAT_ID=your_chat_id
+# Requires TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID — either set in the current
+# shell or in ~/.env (sourced automatically if the vars are not already present).
 
 telegram() {
   local env_file="$HOME/.env"
@@ -16,23 +15,10 @@ TELEGRAM_BOT_TOKEN=
 TELEGRAM_CHAT_ID=
 '
 
-  if [[ ! -f "$env_file" ]]; then
-    echo "Error: ~/.env file not found"
-    echo "$help_text"
-    echo "To get your bot token:"
-    echo "  1. Open Telegram and search for @BotFather"
-    echo "  2. Send /newbot and follow the prompts"
-    echo "  3. Copy the token provided"
-    echo "  https://t.me/BotFather"
-    echo ""
-    echo "To get your chat ID:"
-    echo "  1. Send any message to your bot"
-    echo "  2. Visit: https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates"
-    echo "  3. Find your chat id in the response under result[].message.chat.id"
-    return 1
+  # Source ~/.env if the vars aren't already set in the current shell
+  if [[ -z "$TELEGRAM_BOT_TOKEN" || -z "$TELEGRAM_CHAT_ID" ]]; then
+    [[ -f "$env_file" ]] && source "$env_file"
   fi
-
-  source "$env_file"
 
   if [[ -z "$TELEGRAM_BOT_TOKEN" || -z "$TELEGRAM_CHAT_ID" ]]; then
     echo "Error: Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in ~/.env"
