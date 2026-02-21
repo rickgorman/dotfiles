@@ -136,7 +136,7 @@ man() {
 ########################
 #  Claude              #
 ########################
-alias cc="claude"
+alias ccc="cc --continue"
 
 ########################
 #  Project Setup       #
