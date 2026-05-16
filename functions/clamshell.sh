@@ -11,7 +11,10 @@
 
 clamshell() {
   local current action
-  current=$(pmset -g custom | awk '/Battery Power/{f=1} f && /disablesleep/{print $2; exit}')
+  # `pmset -b disablesleep` is the setter; `pmset -g` reports it back as `SleepDisabled`.
+  # Line is absent when the setting has never been enabled, so default to 0.
+  current=$(pmset -g | awk '/SleepDisabled/{print $2; exit}')
+  current="${current:-0}"
   action="${1:-toggle}"
 
   if [ "$action" = "toggle" ]; then
