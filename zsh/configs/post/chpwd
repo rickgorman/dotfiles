@@ -1,4 +1,5 @@
-# list a directory after cd-ing into it
+# list a directory after cd-ing into it (skip inside Claude Code sessions)
 function chpwd {
+  [[ -n "$CLAUDECODE" ]] && return
   ls
 }
